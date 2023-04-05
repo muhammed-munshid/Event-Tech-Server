@@ -154,14 +154,19 @@ router.post('/reset-pswrd', async (req, res) => {
 router.post('/', async (req, res) => {
     try {
         const manager = await managerModel.findOne({ email: req.body.email })
-        const isMatch = await bcrypt.compare(req.body.password, manager.password) // here it is comparing the user.password which is the encrypted password because in db it is encrypted  and req.body.password is normal password
-        if (!isMatch) {
-            res.status(200).send({ message: "Incorrect Password", success: false })
+        const isMatch = await bcrypt.compare(req.body.password, manager.password)
+        if (manager.approval) {
+            // here it is comparing the user.password which is the encrypted password because in db it is encrypted  and req.body.password is normal password
+           if (!isMatch) {
+               res.status(200).send({ message: "Incorrect Password", success: false })
+           } else {
+               const token = jwt.sign({ id: manager._id }, process.env.JWT_SECRET, {
+                   expiresIn: '1d'
+               }) //the jwt.sign() will generate the token,the expiresIn is for destory the session
+               res.status(200).send({ message: "Login Successfull", success: true, data: token })
+           }
         } else {
-            const token = jwt.sign({ id: manager._id }, process.env.JWT_SECRET, {
-                expiresIn: '1d'
-            }) //the jwt.sign() will generate the token,the expiresIn is for destory the session
-            res.status(200).send({ message: "Login Successfull", success: true, data: token })
+            res.status(200).send({message: 'You have not get approval from admin', approval:true})
         }
     } catch (error) {
         console.log('login', error);

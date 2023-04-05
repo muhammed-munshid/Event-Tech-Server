@@ -17,8 +17,12 @@ const managerSchema=new mongoose.Schema({
         type:String,
         required:true
     },
+    approval:{
+        type:Boolean,
+        default:false
+    }
 })
 
 
-const managerModel = mongoose.model('users',managerSchema)
+const managerModel = mongoose.model('managers',managerSchema)
 module.exports=managerModel

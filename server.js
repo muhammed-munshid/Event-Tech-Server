@@ -5,7 +5,7 @@ const cors = require('cors')
 const dbConfig= require('./config/dbConfig')
 // const userRoute= require('./routes/userRoutes')
 const managerRoute= require('./routes/managerRoute')
-// const adminRoute=require('./routes/adminRoutes')
+const adminRoute=require('./routes/adminRoute')
 
 // when ever the api is having the variables to destructure from the client that means the login will send the 
 // username and password in the format of json format so to destructre the json use the code 
@@ -16,7 +16,7 @@ app.use(cors())
 
 // app.use('/api/user',userRoute)
 app.use('/manager',managerRoute)
-// app.use('/api/admin',adminRoute)
+app.use('/admin',adminRoute)
 
 const port = process.env.PORT || 5000;
 
