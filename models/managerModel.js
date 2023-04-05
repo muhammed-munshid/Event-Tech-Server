@@ -1,4 +1,4 @@
-const mongoose = require('mongoose')
+import mongoose from 'mongoose'
 
 const managerSchema=new mongoose.Schema({
     name:{
@@ -25,4 +25,4 @@ const managerSchema=new mongoose.Schema({
 
 
 const managerModel = mongoose.model('managers',managerSchema)
-module.exports=managerModel
+export default managerModel

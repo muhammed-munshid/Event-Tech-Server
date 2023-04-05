@@ -1,16 +1,8 @@
-const mongoose=require('mongoose')
+import mongoose from "mongoose";
 
-mongoose.connect(process.env.MONGO_URL)
+const connection = ()=>{
+    mongoose.connect('mongodb://0.0.0.0:27017/vutumi4')
+}
+mongoose.set('strictQuery', true);
 
-const connection = mongoose.connection;
-
-connection.on('connected',()=>{
-    console.log('MnogoDB Connection is Successfull');
-})
-
-connection.on('error',(error)=>{
-    console.log('Error in MongoDB Connection',error);
-})
-
-
-module.exports=mongoose
+export default connection

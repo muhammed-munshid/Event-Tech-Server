@@ -1,4 +1,4 @@
-const mongoose = require('mongoose')
+import mongoose from 'mongoose'
 
 const adminSchema=new mongoose.Schema({
     email:{
@@ -13,5 +13,5 @@ const adminSchema=new mongoose.Schema({
 })
 
 
-const managerModel = mongoose.model('admin',adminSchema)
-module.exports=managerModel
+const adminModel = mongoose.model('admin',adminSchema)
+export default adminModel
