@@ -13,11 +13,27 @@ const managerSchema=new mongoose.Schema({
         type:Number,
         required:true
     },
+    address:{
+        type:String,
+        // required:true
+    },
+    adhaar: {
+        type:Array,
+        // required:true
+    },
+    license: {
+        type:Array,
+        // required:true
+    },
+    voterId: {
+        type:Array,
+        // required:true
+    },
     password:{
         type:String,
         required:true
     },
-    approval:{
+    block:{
         type:Boolean,
         default:false
     }

@@ -1,9 +1,8 @@
-import twilio from 'twilio'
+// import twilio from 'twilio'
 import bcrypt from 'bcrypt'
-import managerModel from '../models/managerModel.js';
 import jwt from 'jsonwebtoken';
+import managerModel from '../models/managerModel.js';
 
-let otpCode = Math.floor(100000 + Math.random() * 900000);
 let Name;
 let Email;
 let Mobile;
@@ -23,101 +22,53 @@ export const signUp = async (req, res) => {
             if (user) {
                 res.status(200).send({ exist: true, message: 'You are already signed' })
             } else {
-                const accountSid = "AC8d467a2f7eafcfbf1c4d2adb93b59719";
-                const authToken = process.env.TWILIO_AUTH_TOKEN;
-                const client = new twilio(accountSid, authToken)
-                const mobile = '+91' + managerData.mobile
-                const toPhoneNumber = mobile
-                client.messages
-                    .create({
-                        to: toPhoneNumber,
-                        from: '+15854605014',
-                        body: `Your OTP code is ${otpCode}`,
-                    })
-                    .then((message) => {
-                        console.log(message.sid)
-                        // response.status = true
-                        res.status(200).send({ success: true })
-                    })
-                    .catch((error) => console.log(error));
+                res.status(200).send({ success: true, message: 'Otp sended successfully' })
             }
         })
-
     } catch (err) {
         console.log(err);
         res.status(500).send({ error: true })
     }
+}
 
+export const resendOtp = async (req,res)=>{
+    try {
+        res.status(200).send({success:true, data:Mobile, message: 'Otp sended successfully'})
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({success:false})
+    }
 }
 
 export const signUpWithOtp = async (req, res) => {
     try {
-        let otpNumber = req.body.otp
-        if (otpCode == otpNumber) {
-            const salt = await bcrypt.genSalt(10)
-            const hashedPassword = await bcrypt.hash(Password, salt)
-            Password = hashedPassword
-            const newManager = new managerModel({
-                name: Name,
-                email: Email,
-                mobile: Mobile,
-                password: Password
-            })
-            console.log(newManager);
-            await newManager.save()
-            res.status(200).send({ success: true, message: 'Your request is sending to admin, After approval of admin, you can login. otherwise you cannot login' })
-        } else {
-            console.log('error');
-            res.status(500).send({ error: true })
-        }
+        const salt = await bcrypt.genSalt(10)
+        const hashedPassword = await bcrypt.hash(Password, salt)
+        Password = hashedPassword
+        const newManager = new managerModel({
+            name: Name,
+            email: Email,
+            mobile: Mobile,
+            password: Password
+        })
+        await newManager.save()
+        res.status(200).send({ success: true, message: 'Your request is sending to admin, After approval of admin, you can login. otherwise you cannot login', data: Mobile })
     } catch (err) {
         console.log(err);
-        res.status(500).send({ error: true })
+        res.status(500).send({ success: false })
     }
 }
 
 export const forgetPassword = async (req, res) => {
     try {
         forgetMobile = req.body.mobile
-        managerModel.findOne({ mobile: forgetMobile }).then((user) => {
-            if (user) {
-                const accountSid = "AC8d467a2f7eafcfbf1c4d2adb93b59719";
-                const authToken = process.env.TWILIO_AUTH_TOKEN;
-                const client = new twilio(accountSid, authToken)
-                const mobile = '+91' + forgetMobile
-                const toPhoneNumber = mobile
-                client.messages
-                    .create({
-                        to: toPhoneNumber,
-                        from: '+15854605014',
-                        body: `Your OTP code is ${otpCode}`,
-                    })
-                    .then((message) => {
-                        console.log(message.sid)
-                        res.status(200).send({ success: true })
-                    })
-                    .catch((error) => console.log(error));
+        managerModel.findOne({ mobile: forgetMobile }).then((manager) => {
+            if (manager) {
+                res.status(200).send({ success: true, message: 'Otp sended successfully' });
             } else {
                 res.status(200).send({ noacc: true, message: 'You are not registered in this account' })
             }
         })
-
-    } catch (err) {
-        console.log(err);
-        res.status(500).send({ error: true })
-    }
-
-}
-
-export const resetOtp = async (req, res) => {
-    try {
-        let otpNumber = req.body.otp
-        if (otpCode == otpNumber) {
-            res.status(200).send({ success: true, message: 'Your new password enter here...' })
-        } else {
-            console.log('error');
-            res.status(500).send({ error: true })
-        }
     } catch (err) {
         console.log(err);
         res.status(500).send({ error: true })
@@ -140,7 +91,7 @@ export const resetPassword = async (req, res) => {
                 res.status(200).send({ success: true, message: 'Your reset password successfully' })
             })
         } else {
-            res.status(500).send({ message: 'Your password is not matched' })
+            res.status(200).send({ message: 'Your password is not matched' })
         }
     } catch (err) {
         console.log(err);
@@ -150,20 +101,24 @@ export const resetPassword = async (req, res) => {
 
 export const Login = async (req, res) => {
     try {
-        const manager = await managerModel.findOne({ email: req.body.email })
-        const isMatch = await bcrypt.compare(req.body.password, manager.password)
-        if (manager.approval) {
-            // here it is comparing the user.password which is the encrypted password because in db it is encrypted  and req.body.password is normal password
-            if (!isMatch) {
-                res.status(200).send({ message: "Incorrect Password", success: false })
+        const { email, password } = req.body
+        const manager = await managerModel.findOne({ email: email })
+        if (manager) {
+            const isMatchPswrd = await bcrypt.compare(password, manager.password)
+            if (manager.block) {
+                res.status(200).send({ message: 'You have not get approval from admin', rejected: true })
             } else {
-                const token = jwt.sign({ id: manager._id }, process.env.JWT_SECRET, {
-                    expiresIn: '1d'
-                }) //the jwt.sign() will generate the token,the expiresIn is for destory the session
-                res.status(200).send({ message: "Login Successfull", success: true, data: token })
+                if (!isMatchPswrd) {
+                    res.status(200).send({ message: "Incorrect Password", noUser: false })
+                } else {
+                    const token = jwt.sign({ id: manager._id }, process.env.JWT_SECRET, {
+                        expiresIn: '1d'
+                    }) //the jwt.sign() will generate the token,the expiresIn is for destory the session
+                    res.status(200).send({ message: "Login Successfull", success: true, data: token })
+                }
             }
         } else {
-            res.status(200).send({ message: 'You have not get approval from admin', approval: true })
+            res.status(200).send({ message: "Incorrect Email or Password", noUser: true })
         }
     } catch (error) {
         console.log('login', error);

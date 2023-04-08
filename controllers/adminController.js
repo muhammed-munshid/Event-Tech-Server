@@ -1,4 +1,4 @@
-import jwt from 'jsonwebtoken';
+import managerModel from '../models/managerModel.js';
 
 let Email = 'admin@gmail.com'
 let Password = '12345'
@@ -30,26 +30,24 @@ export const notification = async (req, res) => {
     }
 }
 
-export const approvalManager = async (req, res) => {
+export const blockManager = async (req, res) => {
     try {
-        const approval = req.body.approval
-        console.log(approval);
+        const block = req.body.block
         const managerId = req.query.managerId
-        console.log(managerId);
-        if (approval) {
+        if (block) {
             await managerModel.findOneAndUpdate({ _id: managerId }, {
                 $set: {
-                    approval: !approval
+                    block: !block
                 }
             })
-            res.status(200).send({rejected:true, message:'approval rejected'})
+            res.status(200).send({unBlock:true, message:'manager un blocked'})
         } else {     
             await managerModel.findOneAndUpdate({ _id: managerId }, {
                 $set: {
-                    approval: true
+                    block: true
                 }
             })
-            res.status(200).send({success:true, message:'approval success'})
+            res.status(200).send({block:true, message:'manager blocked'})
         }
     } catch (error) {
         console.log('login', error);

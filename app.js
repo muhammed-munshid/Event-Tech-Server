@@ -4,7 +4,7 @@ import cors from 'cors';
 import connection from './config/dbConfig.js'
 connection()
 
-// import userRoute from './routes/userRoutes.js';
+import userRoute from './routes/UserRoute.js'
 import managerRoute from './routes/managerRoute.js';
 import adminRoute from './routes/adminRoute.js';
 
@@ -18,8 +18,7 @@ app.use(express.json());
 //then only it will be destructured
 
 app.use(cors());
-
-// app.use('/api/user', userRoute);
+app.use('/',userRoute)
 app.use('/manager', managerRoute);
 app.use('/admin', adminRoute);
 
