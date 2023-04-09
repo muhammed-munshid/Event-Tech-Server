@@ -52,7 +52,7 @@ export const signUpWithOtp = async (req, res) => {
             password: Password
         })
         await newManager.save()
-        res.status(200).send({ success: true, message: 'Your request is sending to admin, After approval of admin, you can login. otherwise you cannot login', data: Mobile })
+        res.status(200).send({ success: true, message: 'Your request is sending to admin, After approval of admin, you can login. otherwise you cannot login'})
     } catch (err) {
         console.log(err);
         res.status(500).send({ success: false })
@@ -84,7 +84,7 @@ export const resetPassword = async (req, res) => {
             const hashedPassword = await bcrypt.hash(Password, salt)
             Password = hashedPassword
             managerModel.findOneAndUpdate({ mobile: forgetMobile }, {
-                $push: {
+                $set: {
                     password: Password
                 }
             }).then(() => {
@@ -103,10 +103,11 @@ export const Login = async (req, res) => {
     try {
         const { email, password } = req.body
         const manager = await managerModel.findOne({ email: email })
+        console.log('manager:'+manager);
         if (manager) {
             const isMatchPswrd = await bcrypt.compare(password, manager.password)
             if (manager.block) {
-                res.status(200).send({ message: 'You have not get approval from admin', rejected: true })
+                res.status(200).send({ message: 'Admin blocked your account', block: true })
             } else {
                 if (!isMatchPswrd) {
                     res.status(200).send({ message: "Incorrect Password", noUser: false })
