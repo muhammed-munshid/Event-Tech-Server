@@ -100,3 +100,37 @@ export const blockManager = async (req, res) => {
         res.status(500).send({ message: "Error in Login", success: false, error })
     }
 }
+
+export const companies = async (req, res) => {
+    try {
+        const manager = await managerModel.find()
+        res.status(200).json(manager)
+    } catch (error) {
+        console.log('login', error);
+        res.status(500).send({ message: "Error in Login", success: false, error })
+    }
+}
+
+export const companyDetails = async (req, res) => {
+    try {
+        const managerId = req.params.id
+        console.log(managerId);
+        const manager = await managerModel.findOne({_id:managerId})
+        res.status(200).send({data:manager})
+    } catch (error) {
+        console.log('login', error);
+        res.status(500).send({ message: "Error in Login", success: false, error })
+    }
+}
+
+export const managerDetails = async (req, res) => {
+    try {
+        const managerId = req.params.id
+        console.log(managerId);
+        const manager = await managerModel.findOne({_id:managerId})
+        res.status(200).send({data:manager})
+    } catch (error) {
+        console.log('login', error);
+        res.status(500).send({ message: "Error in Login", success: false, error })
+    }
+}

@@ -21,12 +21,12 @@ const managerSchema=new mongoose.Schema({
         type:Array,
         // required:true
     },
-    license: {
+    license_or_voterId: {
         type:Array,
         // required:true
     },
-    voterId: {
-        type:Array,
+    company_name: {
+        type:String,
         // required:true
     },
     password:{

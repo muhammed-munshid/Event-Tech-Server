@@ -2,22 +2,32 @@
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken';
 import managerModel from '../models/managerModel.js';
+import cloudinary from '../middleware/cloudinary.js';
 
 let Name;
 let Email;
 let Mobile;
+let Company;
+let Address;
 let Password;
+let Aadhar;
+let License_or_voterId;
 
 let forgetMobile;
 
 export const signUp = async (req, res) => {
     try {
         let managerData = req.body
-        const { name, email, mobile, password } = req.body
+        const { name, email, mobile, company, address, password,aadhar, license_or_voterId } = req.body
         Name = name
         Email = email
         Mobile = mobile
+        Company = company
+        Address = address
         Password = password
+        Aadhar = aadhar
+        License_or_voterId = license_or_voterId
+
         managerModel.findOne({ email: managerData.email }).then((user) => {
             if (user) {
                 res.status(200).send({ exist: true, message: 'You are already signed' })
@@ -42,16 +52,25 @@ export const resendOtp = async (req,res)=>{
 
 export const signUpWithOtp = async (req, res) => {
     try {
-        const salt = await bcrypt.genSalt(10)
-        const hashedPassword = await bcrypt.hash(Password, salt)
-        Password = hashedPassword
-        const newManager = new managerModel({
-            name: Name,
-            email: Email,
-            mobile: Mobile,
-            password: Password
-        })
-        await newManager.save()
+        const image = req.body.imageData
+        // cloudinary.uploader.upload(image).then(async(result,err)=>{
+        //     console.log(result.secure_url);
+            const salt = await bcrypt.genSalt(10)
+            const hashedPassword = await bcrypt.hash(Password, salt)
+            Password = hashedPassword
+            // Aadhar = result.secure_url
+            const newManager = new managerModel({
+                name: Name,
+                email: Email,
+                mobile: Mobile,
+                company_name: Company,
+                address: Address,
+                password: Password,
+                // adhaar: Aadhar,
+                // license_or_voterId: License_or_voterId
+            })
+            await newManager.save()
+        // })
         res.status(200).send({ success: true, message: 'Your request is sending to admin, After approval of admin, you can login. otherwise you cannot login'})
     } catch (err) {
         console.log(err);

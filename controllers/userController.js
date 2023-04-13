@@ -125,3 +125,29 @@ export const userResetPassword = async (req, res) => {
         res.status(500).send({ error: true })
     }
 }
+
+export const eventForm = async (req, res) => {
+    try {
+        let userData = req.body
+        console.log(userData);
+        const { name, email, mobile, company,date,time,count,type,pin,place } = req.body
+        await userModel.findOneAndUpdate({_id:userData._id},{
+            $push: {
+                formName: name,
+                formEmail: email,
+                formMobile: mobile,
+                company: company,
+                date: date,
+                time: time,
+                count: count,
+                type: type,
+                pin: pin,
+                place: place
+            }
+        })
+        res.status(200).send({ success: true, message: 'success' })
+    } catch (err) {
+        console.log(err);
+        res.status(500).send({ error: true })
+    }
+}
