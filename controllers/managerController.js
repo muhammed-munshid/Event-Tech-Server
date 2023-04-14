@@ -146,17 +146,17 @@ export const Login = async (req, res) => {
     }
 }
 
-export const getUserId = async (req, res) => {
-    try {
-        const manager = await managerModel.findOne({ _id: req.body.managerId })
-        manager.password = undefined
-        if (!manager) {
-            res.status(200).send({ message: "User does not exist", success: false })
-        } else {
-            res.status(200).send({ success: true, data: manager })
-        }
-    } catch (error) {
-        res.status(500).send({ message: "Error getting user info", success: false, error })
-    }
-}
+// export const getManagerId = async (req, res) => {
+//     try {
+//         const manager = await managerModel.findOne({ _id: req.body.managerId })
+//         manager.password = undefined
+//         if (!manager) {
+//             res.status(200).send({ message: "User does not exist", success: false })
+//         } else {
+//             res.status(200).send({ success: true, data: manager })
+//         }
+//     } catch (error) {
+//         res.status(500).send({ message: "Error getting user info", success: false, error })
+//     }
+// }
 
