@@ -1,20 +1,9 @@
 import mongoose from 'mongoose'
+const Objectid = mongoose.Types.ObjectId
 
-const userSchema = new mongoose.Schema({
-    name: {
-        type: String,
-        required: true
-    },
-    email: {
-        type: String,
-        required: true
-    },
-    mobile: {
-        type: Number,
-        required: true
-    },
-    password: {
-        type: String,
+const formSchema = new mongoose.Schema({
+    user_id: {
+        type: Objectid,
         required: true
     },
     form: 
@@ -63,5 +52,5 @@ const userSchema = new mongoose.Schema({
 })
 
 
-const userModel = mongoose.model('users', userSchema)
-export default userModel
+const formModel = mongoose.model('form', formSchema)
+export default formModel

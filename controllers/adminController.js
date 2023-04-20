@@ -51,14 +51,14 @@ export const blockUser = async (req, res) => {
                     block: !block
                 }
             })
-            res.status(200).send({unBlock:true, message:'user un blocked'})
-        } else {     
+            res.status(200).send({ unBlock: true, message: 'user un blocked' })
+        } else {
             await userModel.findOneAndUpdate({ _id: userId }, {
                 $set: {
                     block: true
                 }
             })
-            res.status(200).send({block:true, message:'user blocked'})
+            res.status(200).send({ block: true, message: 'user blocked' })
         }
     } catch (error) {
         console.log('login', error);
@@ -68,7 +68,7 @@ export const blockUser = async (req, res) => {
 
 export const managers = async (req, res) => {
     try {
-        const manager = await managerModel.find()
+        const manager = await managerModel.find({approval:false})
         res.status(200).json(manager)
     } catch (error) {
         console.log('login', error);
@@ -79,44 +79,24 @@ export const managers = async (req, res) => {
 export const blockManager = async (req, res) => {
     try {
         const block = req.body.block
+        console.log(block);
         const managerId = req.query.managerId
+        console.log(managerId);
         if (block) {
             await managerModel.findOneAndUpdate({ _id: managerId }, {
                 $set: {
                     block: !block
                 }
             })
-            res.status(200).send({unBlock:true, message:'manager un blocked'})
-        } else {     
+            res.status(200).send({ unBlock: true, message: 'manager un blocked' })
+        } else {
             await managerModel.findOneAndUpdate({ _id: managerId }, {
                 $set: {
                     block: true
                 }
             })
-            res.status(200).send({block:true, message:'manager blocked'})
+            res.status(200).send({ block: true, message: 'manager blocked' })
         }
-    } catch (error) {
-        console.log('login', error);
-        res.status(500).send({ message: "Error in Login", success: false, error })
-    }
-}
-
-export const companies = async (req, res) => {
-    try {
-        const manager = await managerModel.find()
-        res.status(200).json(manager)
-    } catch (error) {
-        console.log('login', error);
-        res.status(500).send({ message: "Error in Login", success: false, error })
-    }
-}
-
-export const companyDetails = async (req, res) => {
-    try {
-        const managerId = req.params.id
-        console.log(managerId);
-        const manager = await managerModel.findOne({_id:managerId})
-        res.status(200).send({data:manager})
     } catch (error) {
         console.log('login', error);
         res.status(500).send({ message: "Error in Login", success: false, error })
@@ -126,9 +106,33 @@ export const companyDetails = async (req, res) => {
 export const managerDetails = async (req, res) => {
     try {
         const managerId = req.params.id
-        console.log(managerId);
-        const manager = await managerModel.findOne({_id:managerId})
-        res.status(200).send({data:manager})
+        const manager = await managerModel.findOne({ _id: managerId })
+        res.status(200).send({ data: manager })
+    } catch (error) {
+        console.log('login', error);
+        res.status(500).send({ message: "Error in Login", success: false, error })
+    }
+}
+
+export const approvalManager = async (req, res) => {
+    try {
+        const managerId = req.query.managerId
+        const managers = await managerModel.findOneAndUpdate({_id:managerId},{
+            $set: {
+                approval:true
+            }
+        })
+        res.status(200).send({ success: true, message: 'manager approved' })
+    } catch (error) {
+        console.log('login', error);
+        res.status(500).send({ message: "Error in Login", success: false, error })
+    }
+}
+
+export const approvalList = async (req, res) => {
+    try {
+        const manager = await managerModel.find({approval:true})
+        res.status(200).json(manager)
     } catch (error) {
         console.log('login', error);
         res.status(500).send({ message: "Error in Login", success: false, error })

@@ -33,7 +33,11 @@ const managerSchema=new mongoose.Schema({
         type:String,
         required:true
     },
-    block:{
+    approval:{
+        type:Boolean,
+        default:false
+    },
+    block: {
         type:Boolean,
         default:false
     }

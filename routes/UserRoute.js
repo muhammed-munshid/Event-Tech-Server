@@ -9,7 +9,7 @@ router.post('/otp',Otp)
 router.post('/resend-otp',resend)
 router.post('/forgot', forgotPassword)
 router.post('/reset-pswrd', userResetPassword)
-router.post('/add-event',eventForm)
+router.post('/add-event',userAuth,eventForm)
 router.post('/user-data',userAuth,userData)
 
 export default router

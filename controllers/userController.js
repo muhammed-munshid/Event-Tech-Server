@@ -1,6 +1,7 @@
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken';
 import userModel from "../models/userModel.js";
+import formModel from '../models/formModel.js';
 
 let Name;
 let Email;
@@ -31,12 +32,12 @@ export const userSignUp = async (req, res) => {
     }
 }
 
-export const resend = async (req,res)=>{
+export const resend = async (req, res) => {
     try {
-        res.status(200).send({success:true, data:Mobile, message: 'Otp sended successfully'})
+        res.status(200).send({ success: true, data: Mobile, message: 'Otp sended successfully' })
     } catch (error) {
         console.log(error);
-        res.status(500).send({success:false})
+        res.status(500).send({ success: false })
     }
 }
 
@@ -61,25 +62,25 @@ export const Otp = async (req, res) => {
 
 export const userLogin = async (req, res) => {
     try {
-    const { email, password } = req.body
-    const user = await userModel.findOne({ email: email })
-    if (user) {
-        const isMatchPswrd = await bcrypt.compare(password, user.password)
-        if (user.block) {
-            res.status(200).send({ message: 'Admin blocked your account', block: true })
-        } else {
-            if (!isMatchPswrd) {
-                res.status(200).send({ message: "Incorrect Password", noUser: false })
+        const { email, password } = req.body
+        const user = await userModel.findOne({ email: email })
+        if (user) {
+            const isMatchPswrd = await bcrypt.compare(password, user.password)
+            if (user.block) {
+                res.status(200).send({ message: 'Admin blocked your account', block: true })
             } else {
-                const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-                    expiresIn: '1d'
-                }) //the jwt.sign() will generate the token,the expiresIn is for destory the session
-                res.status(200).send({ message: "Login Successfull", success: true, data: token })
+                if (!isMatchPswrd) {
+                    res.status(200).send({ message: "Incorrect Password", noUser: false })
+                } else {
+                    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+                        expiresIn: '1d'
+                    }) //the jwt.sign() will generate the token,the expiresIn is for destory the session
+                    res.status(200).send({ message: "Login Successfull", success: true, data: token })
+                }
             }
+        } else {
+            res.status(200).send({ message: "Incorrect Email or Password", noUser: true })
         }
-    } else {
-        res.status(200).send({ message: "Incorrect Email or Password", noUser: true })
-    }
     } catch (error) {
         console.log('login', error);
         res.status(500).send({ message: "Error in Login", success: false, error })
@@ -88,22 +89,22 @@ export const userLogin = async (req, res) => {
 
 export const userData = async (req, res) => {
     try {
-        const user =await userModel.findOne({_id:req.body.userId})
-        user.password=undefined 
-        if(!user){
+        const user = await userModel.findOne({ _id: req.body.userId })
+        user.password = undefined
+        if (!user) {
             return res
-            .status(200)
-            .send({message:"User does not exist",success:false})
-        }else{
+                .status(200)
+                .send({ message: "User does not exist", success: false })
+        } else {
             res.status(200).send({
-                success:true,
-                data:user
-        })
+                success: true,
+                data: user
+            })
         }
     } catch (error) {
         res
-        .status(500)
-        .send({ message: "Error getting user info", success: false, error })
+            .status(500)
+            .send({ message: "Error getting user info", success: false, error })
     }
 }
 
@@ -149,24 +150,51 @@ export const userResetPassword = async (req, res) => {
 
 export const eventForm = async (req, res) => {
     try {
-        let userData = req.body
-        console.log(userData);
-        const { name, email, mobile, company,date,time,count,type,pin,place } = req.body
-        await userModel.findOneAndUpdate({_id:userData._id},{
-            $push: {
-                formName: name,
-                formEmail: email,
-                formMobile: mobile,
-                company: company,
-                date: date,
-                time: time,
-                count: count,
-                type: type,
-                pin: pin,
-                place: place
-            }
-        })
-        res.status(200).send({ success: true, message: 'success' })
+        const userId = req.body.userId
+        const userData = req.body
+        const { name, email, mobile, company, date, time, count, type, pin, place } = userData
+        console.log(userData)
+        const formExist = await formModel.findOne({user_id:userId})
+        if (formExist) {
+            await formModel.findOneAndUpdate({ user_id: userId }, {
+                $push: {
+                    form: [{
+                        formName: name,
+                        formEmail: email,
+                        formMobile: mobile,
+                        company: company,
+                        date: date,
+                        time: time,
+                        count: count,
+                        type: type,
+                        pin: pin,
+                        place: place
+                    }]
+                }
+            }).then((response)=>{
+                console.log(response);
+                res.status(200).send({ success: true, message: 'success' })
+            })
+        } else {
+            const newForm = new formModel({
+                user_id: userId,
+                form: [{
+                    formName: name,
+                    formEmail: email,
+                    formMobile: mobile,
+                    company: company,
+                    date: date,
+                    time: time,
+                    count: count,
+                    type: type,
+                    pin: pin,
+                    place: place
+                }]
+            })
+            newForm.save()
+            res.status(200).send({ success: true, message: 'success' })
+        }
+
     } catch (err) {
         console.log(err);
         res.status(500).send({ error: true })
