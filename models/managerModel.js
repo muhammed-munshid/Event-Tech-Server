@@ -33,6 +33,18 @@ const managerSchema=new mongoose.Schema({
         type:String,
         required:true
     },
+    manager_image:{
+        type:Array
+    },
+    description: {
+        type:String
+    },
+    recent_work: {
+        type:Array
+    },
+    upload_photo: {
+        type:Array
+    },
     approval:{
         type:Boolean,
         default:false

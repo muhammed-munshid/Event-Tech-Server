@@ -8,9 +8,10 @@ export default async(req,res,next)=>{
         console.log(token);
         jwt.verify(token,process.env.JWT_SECRET,(err,decoded)=>{
         if(err){
+            console.log('error',err);
             return res.status(401).send({
                 message: "Auth Failed",
-                success:false
+                noToken:true
             })
         }else{
             req.body.managerId=decoded.id;

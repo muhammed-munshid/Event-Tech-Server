@@ -106,7 +106,9 @@ export const blockManager = async (req, res) => {
 export const managerDetails = async (req, res) => {
     try {
         const managerId = req.params.id
+        console.log(managerId);
         const manager = await managerModel.findOne({ _id: managerId })
+        console.log("managerDetails:",manager);
         res.status(200).send({ data: manager })
     } catch (error) {
         console.log('login', error);

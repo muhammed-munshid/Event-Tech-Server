@@ -11,8 +11,8 @@ import jwt from 'jsonwebtoken';
         if(err){
             console.log(err);
             return res.status(401).send({
-                message: "Auth Failed",
-                success:false
+                message: "You have no account, Please Login",
+                noToken:true
             })
         }else{
             req.body.userId=decoded.id;

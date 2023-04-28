@@ -2,6 +2,7 @@ import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken';
 import userModel from "../models/userModel.js";
 import formModel from '../models/formModel.js';
+import managerModel from '../models/managerModel.js';
 
 let Name;
 let Email;
@@ -154,7 +155,7 @@ export const eventForm = async (req, res) => {
         const userData = req.body
         const { name, email, mobile, company, date, time, count, type, pin, place } = userData
         console.log(userData)
-        const formExist = await formModel.findOne({user_id:userId})
+        const formExist = await formModel.findOne({ user_id: userId })
         if (formExist) {
             await formModel.findOneAndUpdate({ user_id: userId }, {
                 $push: {
@@ -171,7 +172,7 @@ export const eventForm = async (req, res) => {
                         place: place
                     }]
                 }
-            }).then((response)=>{
+            }).then((response) => {
                 console.log(response);
                 res.status(200).send({ success: true, message: 'success' })
             })
@@ -198,5 +199,42 @@ export const eventForm = async (req, res) => {
     } catch (err) {
         console.log(err);
         res.status(500).send({ error: true })
+    }
+}
+
+export const companyList = async (req, res) => {
+    try {
+        const managerList = await managerModel.find()
+        console.log(managerList);
+        res.status(200).json(managerList)
+    } catch (err) {
+        console.log(err);
+        res.status(500).send({ error: true })
+    }
+}
+
+export const companyDetails = async (req, res) => {
+    try {
+        const managerId = req.params.id
+        console.log(managerId);
+        const manager = await managerModel.findOne({ _id: managerId })
+        console.log("companyDetails:",manager)
+        res.status(200).send({ data: manager })
+    } catch (error) {
+        console.log('login', error);
+        res.status(500).send({ message: "Error in Login", success: false, error })
+    }
+}
+
+export const profileDetails = async (req, res) => {
+    try {
+        const userId = req.body.userId
+        console.log(userId);
+        const user = await userModel.findOne({ _id: userId })
+        console.log("userDetails:",user)
+        res.status(200).send({ data: user })
+    } catch (error) {
+        console.log('login', error);
+        res.status(500).send({ message: "Error in Login", success: false, error })
     }
 }
