@@ -226,6 +226,29 @@ export const companyDetails = async (req, res) => {
     }
 }
 
+export const addProfile = async (req, res) => {
+    try {
+        const userId = req.body.userId
+        console.log(userId);
+        const details = req.body
+        console.log(details);
+        const {name,email,mobile} = details.otherData
+        const {imageUpload} = details.imageData
+        await userModel.findOneAndUpdate({_id:userId},{
+            $set: {
+                name:name,
+                email:email,
+                mobile:mobile,
+                profile_image:imageUpload
+            }
+        })
+        res.status(200).send({ success: true, message:'Profile updated' })
+    } catch (error) {
+        console.log('login', error);
+        res.status(500).send({ message: "Error in Login", success: false, error })
+    }
+}
+
 export const profileDetails = async (req, res) => {
     try {
         const userId = req.body.userId

@@ -192,11 +192,11 @@ export const bookingDetails = async (req, res) => {
 
 export const viewServices = async (req, res) => {
     try {
-    const managerId = req.body.managerId
-    console.log(managerId);
-    const serviceList = await serviceModel.findOne({ manager_id: managerId })
-    console.log(serviceList);
-    res.status(200).send({ success: true, data:serviceList })
+        const managerId = req.body.managerId
+        console.log(managerId);
+        const serviceList = await serviceModel.findOne({ manager_id: managerId, status:true })
+        console.log(serviceList);
+        res.status(200).send({ success: true, data: serviceList })
     } catch (error) {
         console.log('login', error);
         res.status(500).send({ message: "Error in Login", success: false, error })
@@ -205,34 +205,98 @@ export const viewServices = async (req, res) => {
 
 export const services = async (req, res) => {
     try {
-        // const {name,leader,mobile,number} = req.body
-        // const newForm = new approvalModel
         const managerId = req.body.managerId
-        const { foodChecked, stageChecked, decorateChecked } = req.body
-        const existService = await serviceModel.findOne({manager_id:managerId})
+        const { foodChecked, stageChecked, decorateChecked, audioChecked, videoChecked } = req.body
+        const existService = await serviceModel.findOne({ manager_id: managerId })
         if (!existService) {
             const newService = new serviceModel({
                 manager_id: managerId,
+                catering_name: 'Food Service',
+                stage_name: 'Stage Service',
+                decoration_name: 'Decoration',
+                audio_name: 'Audio Service',
+                video_name: 'Video Service',
                 cateringMenu: [{
-                    name: 'Food Service',
-                    category_name:['Starters','Main','Desserts','Salads'],
+                    category_name: ['Starters', 'Main', 'Desserts', 'Salads'],
                     status: foodChecked
                 }],
                 stageMenu: [{
-                    name: 'Stage Service',
-                    category_name:['Stage Photo','Stage Budget','Stage Size'],
+                    category_name: ['Stage Photo', 'Stage Budget', 'Stage Size'],
                     status: stageChecked
                 }],
                 decorationMenu: [{
-                    name: 'Decoration',
-                    category_name:['Decoration Photo','Including Photos','Decoration Budget'],
+                    category_name: ['Decoration Photo', 'Including Photos', 'Decoration Budget'],
                     status: decorateChecked
+                }],
+                audioMenu: [{
+                    category_name: ['Audio Things Photos', 'Audio Things', 'Price'],
+                    status: audioChecked
+                }],
+                videoMenu: [{
+                    category_name: ['Video Things Photos', 'Video Things', 'Price'],
+                    status: videoChecked
                 }]
             })
             await newService.save()
             res.status(200).send({ success: true })
         } else {
-            res.status(200).send({exist:true,message:'You have already added'})
+            res.status(200).send({ exist: true, message: 'You have already added' })
+        }
+    } catch (error) {
+        console.log('login', error);
+        res.status(500).send({ message: "Error in Login", success: false, error })
+    }
+}
+
+export const addCatering = async (req, res) => {
+    try {
+        const managerId = req.body.managerId
+        const { starterName, starterPrice, mainName, mainPrice, dessertsName, dessertsPrice, saladsName, saladsPrice } = req.body
+        let exist = false
+        const existCatering = await serviceModel.findOne({ manager_id: managerId })
+        const array = existCatering.cateringMenu
+        array.forEach(element => {
+            if (element.catering_id == managerId) {
+                exist = true
+            } else {
+                exist = false
+            }
+        })
+        if (!exist) {
+            await serviceModel.findOneAndUpdate({ manager_id: managerId }, {
+                $set: {
+                    cateringMenu: [{
+                        catering_id: managerId,
+                        category_name: ['Starters', 'Main', 'Desserts', 'Salads'],
+                        starter_name: starterName,
+                        starter_price: starterPrice,
+                        main_name: mainName,
+                        main_price: mainPrice,
+                        dessert_name: dessertsName,
+                        dessert_price: dessertsPrice,
+                        salad_name: saladsName,
+                        salad_price: saladsPrice
+                    }]
+                }
+            })
+            res.status(200).send({ success: true })
+        } else {
+            await serviceModel.findOneAndUpdate({ manager_id: managerId }, {
+                $push: {
+                    cateringMenu: [{
+                        catering_id: managerId,
+                        starter_name: starterName,
+                        starter_price: starterPrice,
+                        main_name: mainName,
+                        main_price: mainPrice,
+                        dessert_name: dessertsName,
+                        dessert_price: dessertsPrice,
+                        salad_name: saladsName,
+                        salad_price: saladsPrice
+                    }]
+                }
+            })
+            res.status(200).send({ success: true })
         }
     } catch (error) {
         console.log('login', error);

@@ -5,91 +5,123 @@ const serviceSchema = new mongoose.Schema({
     manager_id: {
         type: Objectid
     },
+    catering_name: {
+        type: String
+    },
+    stage_name: {
+        type: String
+    },
+    decoration_name: {
+        type: String
+    },
+    audio_name: {
+        type: String
+    },
+    video_name: {
+        type: String
+    },
     cateringMenu: [{
-        name: {
-            type:String
+        catering_id: {
+            type: Objectid
         },
         category_name: {
-            type:Array
+            type: Array
         },
-        Starters: {
+        starter_name: {
             type: String,
-            // required: true
         },
-        Main: {
+        starter_price: {
             type: String,
-            // required: true
         },
-        Desserts: {
+        main_name: {
             type: String,
-            // required: true
         },
-        Salads: {
+        main_price: {
             type: String,
-            // required: true
         },
-        Status: {
-            type:Boolean,
-            default:false
+        dessert_name: {
+            type: String,
+        },
+        dessert_price: {
+            type: String,
+        },
+        salad_name: {
+            type: String,
+        },
+        salad_price: {
+            type: String,
+        },
+        status: {
+            type: Boolean,
+            default: false
         }
     }],
     stageMenu: [{
-        name: {
-            type:String
-        },
         category_name: {
-            type:Array
+            type: Array
         },
-        Stage_photo:{
-            type:Array,
-            // required:true
+        stage_photo: {
+            type: Array,
         },
-        Stage_budget:{
-            type:Number,
-            // required:true
+        stage_budget: {
+            type: Number,
         },
-        Stage_size:{
-            type:String,
-            // required:true
+        stage_size: {
+            type: String,
         },
-        Status: {
-            type:Boolean,
-            default:false
-        }
-    }
-    ],
-    decorationMenu: [{
-        name: {
-            type:String
-        },
-        category_name: {
-            type:Array
-        },
-        Decoration_photo:{
-            type:Array,
-            // required:true
-        },
-        Including_photos:{
-            type:Array,
-            // required:true
-        },
-        Decoration_budget:{
-            type:Number,
-            // required:true
-        },
-        Status: {
-            type:Boolean,
-            default:false
+        status: {
+            type: Boolean,
+            default: false
         }
     }],
-    audioMenu: {
-        type: String,
-        // required: true
-    },
-    videoMenu: {
-        type: String,
-        // required: true
-    },
+    decorationMenu: [{
+        category_name: {
+            type: Array
+        },
+        decoration_photo: {
+            type: Array,
+        },
+        including_photos: {
+            type: Array,
+        },
+        decoration_budget: {
+            type: Number,
+        },
+        status: {
+            type: Boolean,
+            default: false
+        }
+    }],
+    audioMenu: [{
+        category_name: {
+            type: Array
+        },
+        things_photos: {
+            type: Array
+        },
+        things_name: {
+            type: String
+        },
+        status: {
+            type: Boolean,
+            default: false
+        }
+    }],
+    videoMenu: [{
+        category_name: {
+            type: Array
+        },
+        things_photos: {
+            type: Array
+        },
+        things_name: {
+            type: String
+        },
+        status: {
+            type: Boolean,
+            default: false
+        }
+    }]
 })
 
 
