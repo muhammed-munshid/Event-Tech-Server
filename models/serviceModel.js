@@ -30,6 +30,9 @@ const serviceSchema = new mongoose.Schema({
         starter_name: {
             type: String,
         },
+        starter_image: {    
+            type: Array
+        },
         starter_price: {
             type: String,
         },
@@ -39,17 +42,26 @@ const serviceSchema = new mongoose.Schema({
         main_price: {
             type: String,
         },
+        main_image: {
+            type: Array
+        },
         dessert_name: {
             type: String,
         },
         dessert_price: {
             type: String,
         },
+        dessert_image: {
+            type: Array
+        },
         salad_name: {
             type: String,
         },
         salad_price: {
             type: String,
+        },
+        salad_image: {
+            type: Array
         },
         status: {
             type: Boolean,

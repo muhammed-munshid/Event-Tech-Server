@@ -214,8 +214,8 @@ export const services = async (req, res) => {
                 catering_name: 'Food Service',
                 stage_name: 'Stage Service',
                 decoration_name: 'Decoration',
-                audio_name: 'Audio Service',
-                video_name: 'Video Service',
+                audio_name: 'Audio',
+                video_name: 'Video',
                 cateringMenu: [{
                     category_name: ['Starters', 'Main', 'Desserts', 'Salads'],
                     status: foodChecked
@@ -251,7 +251,11 @@ export const services = async (req, res) => {
 export const addCatering = async (req, res) => {
     try {
         const managerId = req.body.managerId
-        const { starterName, starterPrice, mainName, mainPrice, dessertsName, dessertsPrice, saladsName, saladsPrice } = req.body
+        const { cateringData, imageUpload1, imageUpload2, imageUpload3, imageUpload4 } = req.body
+        const { starterName, starterPrice, mainName, mainPrice, dessertsName, dessertsPrice, saladsName, saladsPrice } = cateringData
+        console.log('bodyyyyyyg'+starterName);
+        
+        console.log(imageUpload1);
         let exist = false
         const existCatering = await serviceModel.findOne({ manager_id: managerId })
         const array = existCatering.cateringMenu
@@ -263,6 +267,7 @@ export const addCatering = async (req, res) => {
             }
         })
         if (!exist) {
+            console.log("Hellooo");
             await serviceModel.findOneAndUpdate({ manager_id: managerId }, {
                 $set: {
                     cateringMenu: [{
@@ -270,12 +275,16 @@ export const addCatering = async (req, res) => {
                         category_name: ['Starters', 'Main', 'Desserts', 'Salads'],
                         starter_name: starterName,
                         starter_price: starterPrice,
+                        starter_image: imageUpload1,
                         main_name: mainName,
                         main_price: mainPrice,
+                        main_image: imageUpload2,
                         dessert_name: dessertsName,
                         dessert_price: dessertsPrice,
+                        dessert_image: imageUpload3,
                         salad_name: saladsName,
-                        salad_price: saladsPrice
+                        salad_price: saladsPrice,
+                        salad_image: imageUpload4
                     }]
                 }
             })
@@ -287,12 +296,16 @@ export const addCatering = async (req, res) => {
                         catering_id: managerId,
                         starter_name: starterName,
                         starter_price: starterPrice,
+                        starter_image: imageUpload1,
                         main_name: mainName,
                         main_price: mainPrice,
+                        main_image: imageUpload2,
                         dessert_name: dessertsName,
                         dessert_price: dessertsPrice,
+                        dessert_image: imageUpload3,
                         salad_name: saladsName,
-                        salad_price: saladsPrice
+                        salad_price: saladsPrice,
+                        salad_image: imageUpload4
                     }]
                 }
             })

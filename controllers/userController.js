@@ -1,8 +1,11 @@
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken';
+import { OAuth2Client } from 'google-auth-library'
 import userModel from "../models/userModel.js";
 import formModel from '../models/formModel.js';
 import managerModel from '../models/managerModel.js';
+import { connections } from 'mongoose';
+import serviceModel from '../models/serviceModel.js';
 
 let Name;
 let Email;
@@ -86,6 +89,46 @@ export const userLogin = async (req, res) => {
         console.log('login', error);
         res.status(500).send({ message: "Error in Login", success: false, error })
     }
+}
+
+
+export const loginGoogle = async (req, res) => {
+    // try {
+        const googleToken = req.params.id
+        console.log(googleToken);
+        const client = new OAuth2Client(process.env.CLIENT_ID)
+        console.log(client);
+        const ticket = await client.verifyIdToken({
+            idToken: googleToken,
+            audience: process.env.CLIENT_ID, // Specify the CLIENT_ID of the app that accesses the backend
+            // Or, if multiple clients access the backend:
+            //[CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3]
+        });
+        console.log(ticket);
+        const payload = ticket.getPayload();
+        const userid = payload["sub"];
+        console.log(payload);
+        const userdetails = {
+            email: payload.email,
+            name: payload.name,
+            picture: payload.picture,
+        }
+
+        const user = await userModel.findOne({ email: userdetails.email });
+        console.log("USERSIGN");
+        console.log(user);
+        if (user) {
+          let token = jwt.sign({
+            _id: user._id,
+          });
+          res.send({message: "Login Successfull", success: true, data: token})
+        } else {
+          res.send({message: `There is no account registered with the email id ${userdetails.email}`, noAcc: true})
+        }
+    // } catch (error) {
+    //     console.log('login', error);
+    //     res.status(500).send({ message: "Error in Login", success: false, error })
+    // }
 }
 
 export const userData = async (req, res) => {
@@ -206,7 +249,7 @@ export const companyList = async (req, res) => {
     try {
         const managerList = await managerModel.find()
         console.log(managerList);
-        res.status(200).json(managerList)
+        res.status(200).send({ data: managerList })
     } catch (err) {
         console.log(err);
         res.status(500).send({ error: true })
@@ -218,8 +261,32 @@ export const companyDetails = async (req, res) => {
         const managerId = req.params.id
         console.log(managerId);
         const manager = await managerModel.findOne({ _id: managerId })
-        console.log("companyDetails:",manager)
         res.status(200).send({ data: manager })
+    } catch (error) {
+        console.log('login', error);
+        res.status(500).send({ message: "Error in Login", success: false, error })
+    }
+}
+
+export const serviceDetails = async (req, res) => {
+    try {
+        const userId = req.body.userId
+        console.log(userId);
+        const services = await serviceModel.findOne({ user_id: userId })
+        res.status(200).send({ data: services })
+    } catch (error) {
+        console.log('login', error);
+        res.status(500).send({ message: "Error in Login", success: false, error })
+    }
+}
+
+export const viewMenuList = async (req, res) => {
+    try {
+        const managerId = req.params.id
+        console.log(managerId);
+        const serviceList = await serviceModel.findOne({ manager_id: managerId })
+        console.log(serviceList);
+        res.status(200).send({ success: true, data: serviceList })
     } catch (error) {
         console.log('login', error);
         res.status(500).send({ message: "Error in Login", success: false, error })
@@ -232,17 +299,17 @@ export const addProfile = async (req, res) => {
         console.log(userId);
         const details = req.body
         console.log(details);
-        const {name,email,mobile} = details.otherData
-        const {imageUpload} = details.imageData
-        await userModel.findOneAndUpdate({_id:userId},{
+        const { name, email, mobile } = details.otherData
+        const { imageUpload } = details.imageData
+        await userModel.findOneAndUpdate({ _id: userId }, {
             $set: {
-                name:name,
-                email:email,
-                mobile:mobile,
-                profile_image:imageUpload
+                name: name,
+                email: email,
+                mobile: mobile,
+                profile_image: imageUpload
             }
         })
-        res.status(200).send({ success: true, message:'Profile updated' })
+        res.status(200).send({ success: true, message: 'Profile updated' })
     } catch (error) {
         console.log('login', error);
         res.status(500).send({ message: "Error in Login", success: false, error })
@@ -254,7 +321,7 @@ export const profileDetails = async (req, res) => {
         const userId = req.body.userId
         console.log(userId);
         const user = await userModel.findOne({ _id: userId })
-        console.log("userDetails:",user)
+        console.log("userDetails:", user)
         res.status(200).send({ data: user })
     } catch (error) {
         console.log('login', error);

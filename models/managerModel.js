@@ -27,7 +27,6 @@ const managerSchema=new mongoose.Schema({
     },
     company_name: {
         type:String,
-        // required:true
     },
     password:{
         type:String,
