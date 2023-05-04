@@ -28,6 +28,18 @@ const managerSchema=new mongoose.Schema({
     company_name: {
         type:String,
     },
+    state: {
+        type:String
+    },
+    place: {
+        type:String
+    },
+    pincode : {
+        type:Number
+    },
+    district: {
+        type:String
+    },
     password:{
         type:String,
         required:true
@@ -39,9 +51,6 @@ const managerSchema=new mongoose.Schema({
         type:String
     },
     recent_work: {
-        type:Array
-    },
-    upload_photo: {
         type:Array
     },
     approval:{

@@ -9,19 +9,34 @@ let Email;
 let Mobile;
 let Company;
 let Address;
+let Aadhar;
+let License;
+let Pincode;
+let State;
+let District;
+let Place;
 let Password;
 
 let forgetMobile;
 
 export const signUp = async (req, res) => {
     try {
-        let managerData = req.body
-        const { name, email, mobile, company, address, password } = req.body
+        console.log('Hii');
+        const {managerData,imageData} = req.body
+        console.log(imageData);
+        console.log(managerData);
+        const { name, email, mobile, company, address, pincode, state, district, place, password } = managerData 
         Name = name
         Email = email
         Mobile = mobile
         Company = company
         Address = address
+        Aadhar = imageData.imageUpload1
+        License = imageData.imageUpload2
+        Pincode = pincode
+        State = state
+        District = district
+        Place = place
         Password = password
 
         managerModel.findOne({ email: managerData.email }).then((user) => {
@@ -48,8 +63,6 @@ export const resendOtp = async (req, res) => {
 
 export const signUpWithOtp = async (req, res) => {
     try {
-        const managerData = req.body
-        console.log(managerData);
         const salt = await bcrypt.genSalt(10)
         const hashedPassword = await bcrypt.hash(Password, salt)
         Password = hashedPassword
@@ -59,9 +72,13 @@ export const signUpWithOtp = async (req, res) => {
             mobile: Mobile,
             company_name: Company,
             address: Address,
+            pincode: Pincode,
+            state: State,
+            district: District,
+            place: Place,
             password: Password,
-            adhaar: managerData.imageUpload1,
-            license_or_voterId: managerData.imageUpload2
+            adhaar: Aadhar,
+            license_or_voterId: License
         })
         await newManager.save()
         res.status(200).send({ success: true, message: 'Your request is sending to admin, After approval of admin, you can login. otherwise you cannot login' })
@@ -194,7 +211,7 @@ export const viewServices = async (req, res) => {
     try {
         const managerId = req.body.managerId
         console.log(managerId);
-        const serviceList = await serviceModel.findOne({ manager_id: managerId, status:true })
+        const serviceList = await serviceModel.findOne({ manager_id: managerId, status: true })
         console.log(serviceList);
         res.status(200).send({ success: true, data: serviceList })
     } catch (error) {
@@ -214,8 +231,8 @@ export const services = async (req, res) => {
                 catering_name: 'Food Service',
                 stage_name: 'Stage Service',
                 decoration_name: 'Decoration',
-                audio_name: 'Audio',
-                video_name: 'Video',
+                photography_name: 'Photography',
+                vehicle_name: 'Luxury Vehicles',
                 cateringMenu: [{
                     category_name: ['Starters', 'Main', 'Desserts', 'Salads'],
                     status: foodChecked
@@ -228,12 +245,12 @@ export const services = async (req, res) => {
                     category_name: ['Decoration Photo', 'Including Photos', 'Decoration Budget'],
                     status: decorateChecked
                 }],
-                audioMenu: [{
-                    category_name: ['Audio Things Photos', 'Audio Things', 'Price'],
+                photographyMenu: [{
+                    category_name: ['Recent Photography Photos', 'Shop Name', 'Mobile Number','Address', 'Budget'],
                     status: audioChecked
                 }],
-                videoMenu: [{
-                    category_name: ['Video Things Photos', 'Video Things', 'Price'],
+                luxuryVehicleMenu: [{
+                    category_name: ['Vehicle', 'Owner Name', 'Mobile Number', 'Rent Price'],
                     status: videoChecked
                 }]
             })
@@ -253,8 +270,8 @@ export const addCatering = async (req, res) => {
         const managerId = req.body.managerId
         const { cateringData, imageUpload1, imageUpload2, imageUpload3, imageUpload4 } = req.body
         const { starterName, starterPrice, mainName, mainPrice, dessertsName, dessertsPrice, saladsName, saladsPrice } = cateringData
-        console.log('bodyyyyyyg'+starterName);
-        
+        console.log('bodyyyyyyg' + starterName);
+
         console.log(imageUpload1);
         let exist = false
         const existCatering = await serviceModel.findOne({ manager_id: managerId })
@@ -320,13 +337,14 @@ export const addCatering = async (req, res) => {
 export const managerProfile = async (req, res) => {
     // try {
     const managerId = req.body.managerId
-    const { name, description, imageUpload1, imageUpload2 } = req.body
+    const { name, description, imageUpload1, imageUpload2, imageUpload3 } = req.body
     const form = await managerModel.findOneAndUpdate({ _id: managerId }, {
         $set: {
             name: name,
             description: description,
-            upload_photo: imageUpload1,
-            recent_work: imageUpload2,
+            manager_image: imageUpload1,
+            company_logo: imageUpload2,
+            recent_work: imageUpload3,
         }
     })
     console.log(form);

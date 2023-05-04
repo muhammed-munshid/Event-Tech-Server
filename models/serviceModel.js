@@ -14,10 +14,10 @@ const serviceSchema = new mongoose.Schema({
     decoration_name: {
         type: String
     },
-    audio_name: {
+    photography_name: {
         type: String
     },
-    video_name: {
+    vehicle_name: {
         type: String
     },
     cateringMenu: [{
@@ -104,30 +104,39 @@ const serviceSchema = new mongoose.Schema({
             default: false
         }
     }],
-    audioMenu: [{
-        category_name: {
+    photographyMenu: [{
+        recent_photos: {
             type: Array
         },
-        things_photos: {
-            type: Array
-        },
-        things_name: {
+        shop_name: {
             type: String
+        },
+        mobile_number: {
+            type: Number
+        },
+        address : {
+            type: String
+        },
+        budget: {
+            type: Number
         },
         status: {
             type: Boolean,
             default: false
         }
     }],
-    videoMenu: [{
-        category_name: {
+    luxuryVehicleMenu: [{
+        vehicle_image: {
             type: Array
         },
-        things_photos: {
-            type: Array
-        },
-        things_name: {
+        owner_name: {
             type: String
+        },
+        mobile_number: {
+            type: Number
+        },
+        rent_price: {
+            type: Number
         },
         status: {
             type: Boolean,
