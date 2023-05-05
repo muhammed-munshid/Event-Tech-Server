@@ -247,7 +247,7 @@ export const eventForm = async (req, res) => {
 
 export const companyList = async (req, res) => {
     try {
-        const managerList = await managerModel.find()
+        const managerList = await managerModel.find({approval:true})
         console.log(managerList);
         res.status(200).send({ data: managerList })
     } catch (err) {

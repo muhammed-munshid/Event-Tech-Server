@@ -8,17 +8,37 @@ const serviceSchema = new mongoose.Schema({
     catering_name: {
         type: String
     },
+    catering_status: {
+        type: Boolean,
+        default: false
+    },
     stage_name: {
         type: String
+    },
+    stage_status: {
+        type: Boolean,
+        default: false
     },
     decoration_name: {
         type: String
     },
+    decoration_status: {
+        type: Boolean,
+        default: false
+    },
     photography_name: {
         type: String
     },
+    photography_status: {
+        type: Boolean,
+        default: false
+    },
     vehicle_name: {
         type: String
+    },
+    vehicle_status: {
+        type: Boolean,
+        default: false
     },
     cateringMenu: [{
         catering_id: {
@@ -30,7 +50,7 @@ const serviceSchema = new mongoose.Schema({
         starter_name: {
             type: String,
         },
-        starter_image: {    
+        starter_image: {
             type: Array
         },
         starter_price: {
@@ -69,6 +89,9 @@ const serviceSchema = new mongoose.Schema({
         }
     }],
     stageMenu: [{
+        stage_id: {
+            type: Objectid
+        },
         category_name: {
             type: Array
         },
@@ -105,6 +128,9 @@ const serviceSchema = new mongoose.Schema({
         }
     }],
     photographyMenu: [{
+        category_name: {
+            type: Array
+        },
         recent_photos: {
             type: Array
         },
@@ -114,7 +140,7 @@ const serviceSchema = new mongoose.Schema({
         mobile_number: {
             type: Number
         },
-        address : {
+        address: {
             type: String
         },
         budget: {
@@ -126,6 +152,9 @@ const serviceSchema = new mongoose.Schema({
         }
     }],
     luxuryVehicleMenu: [{
+        category_name: {
+            type: Array
+        },
         vehicle_image: {
             type: Array
         },

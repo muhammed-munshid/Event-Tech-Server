@@ -22,10 +22,10 @@ let forgetMobile;
 export const signUp = async (req, res) => {
     try {
         console.log('Hii');
-        const {managerData,imageData} = req.body
+        const { managerData, imageData } = req.body
         console.log(imageData);
         console.log(managerData);
-        const { name, email, mobile, company, address, pincode, state, district, place, password } = managerData 
+        const { name, email, mobile, company, address, pincode, state, district, place, password } = managerData
         Name = name
         Email = email
         Mobile = mobile
@@ -211,7 +211,7 @@ export const viewServices = async (req, res) => {
     try {
         const managerId = req.body.managerId
         console.log(managerId);
-        const serviceList = await serviceModel.findOne({ manager_id: managerId, status: true })
+        const serviceList = await serviceModel.findOne({ manager_id: managerId })
         console.log(serviceList);
         res.status(200).send({ success: true, data: serviceList })
     } catch (error) {
@@ -223,16 +223,38 @@ export const viewServices = async (req, res) => {
 export const services = async (req, res) => {
     try {
         const managerId = req.body.managerId
-        const { foodChecked, stageChecked, decorateChecked, audioChecked, videoChecked } = req.body
+        const { foodChecked, stageChecked, decorateChecked, photographyChecked, vehicleChecked } = req.body
         const existService = await serviceModel.findOne({ manager_id: managerId })
         if (!existService) {
             const newService = new serviceModel({
                 manager_id: managerId,
                 catering_name: 'Food Service',
+                catering_status: foodChecked,
                 stage_name: 'Stage Service',
+                stage_status: stageChecked,
                 decoration_name: 'Decoration',
+                decoration_status: decorateChecked,
                 photography_name: 'Photography',
+                photography_status: photographyChecked,
                 vehicle_name: 'Luxury Vehicles',
+                vehicle_status: vehicleChecked,
+                // service_names: [{
+                //     catering: {
+                //         status: foodChecked,
+                //     },
+                //     stage: {
+                //         status: stageChecked,
+                //     },
+                //     decoration: {
+                //         status: decorateChecked,
+                //     },
+                //     photography: {
+                //         status: photographyChecked,
+                //     },
+                //     vehicle: {                    
+                //         status: vehicleChecked
+                //     }
+                // }],
                 cateringMenu: [{
                     category_name: ['Starters', 'Main', 'Desserts', 'Salads'],
                     status: foodChecked
@@ -246,12 +268,12 @@ export const services = async (req, res) => {
                     status: decorateChecked
                 }],
                 photographyMenu: [{
-                    category_name: ['Recent Photography Photos', 'Shop Name', 'Mobile Number','Address', 'Budget'],
-                    status: audioChecked
+                    category_name: ['Recent Photography Photos', 'Shop Name', 'Mobile Number', 'Address', 'Budget'],
+                    status: photographyChecked
                 }],
                 luxuryVehicleMenu: [{
                     category_name: ['Vehicle', 'Owner Name', 'Mobile Number', 'Rent Price'],
-                    status: videoChecked
+                    status: vehicleChecked
                 }]
             })
             await newService.save()
@@ -262,6 +284,54 @@ export const services = async (req, res) => {
     } catch (error) {
         console.log('login', error);
         res.status(500).send({ message: "Error in Login", success: false, error })
+    }
+}
+
+export const removeService = async (req, res) => {
+    try {
+        const managerId = req.body.managerId
+        const name = req.query.name
+        const serviceData = await serviceModel.findOne({manager_id: managerId})
+        if (serviceData.catering_name == name) {            
+            await serviceModel.findOneAndUpdate({ manager_id: managerId }, {
+                $set: {
+                    catering_status: false
+                }
+            })
+            res.status(200).send({ success: true })
+        } else if (serviceData.stage_name == name) {
+            await serviceModel.findOneAndUpdate({ manager_id: managerId }, {
+                $set: {
+                    stage_status: false
+                }
+            })
+            res.status(200).send({ success: true })
+        } else if (serviceData.decoration_name == name) {
+            await serviceModel.findOneAndUpdate({ manager_id: managerId }, {
+                $set: {
+                    decoration_status: false
+                }
+            })
+            res.status(200).send({ success: true })
+        } else if (serviceData.photography_name == name) {
+            await serviceModel.findOneAndUpdate({ manager_id: managerId }, {
+                $set: {
+                    photography_status: false
+                }
+            })
+            res.status(200).send({ success: true })
+        } else if (serviceData.vehicle_name == name) {
+            await serviceModel.findOneAndUpdate({ manager_id: managerId }, {
+                $set: {
+                    vehicle_status: false
+                }
+            })
+            res.status(200).send({ success: true })
+        } else {
+            res.status(200).send({ error: true })
+        }
+    } catch (error) {
+        res.status(500).send({ success: false })
     }
 }
 
@@ -334,25 +404,75 @@ export const addCatering = async (req, res) => {
     }
 }
 
-export const managerProfile = async (req, res) => {
-    // try {
-    const managerId = req.body.managerId
-    const { name, description, imageUpload1, imageUpload2, imageUpload3 } = req.body
-    const form = await managerModel.findOneAndUpdate({ _id: managerId }, {
-        $set: {
-            name: name,
-            description: description,
-            manager_image: imageUpload1,
-            company_logo: imageUpload2,
-            recent_work: imageUpload3,
+export const addStage = async (req, res) => {
+    try {
+        const managerId = req.body.managerId
+        const { stageData, imageUpload1 } = req.body
+        const { stageBudget, stageSize } = stageData
+        console.log('bodyyyyyyg' + stageBudget);
+        console.log(imageUpload1);
+        let exist = false
+        const existStage = await serviceModel.findOne({ manager_id: managerId })
+        const array = existStage.stageMenu
+        array.forEach(element => {
+            if (element.stage_id == managerId) {
+                exist = true
+            } else {
+                exist = false
+            }
+        })
+        if (!exist) {
+            console.log("Hellooo");
+            await serviceModel.findOneAndUpdate({ manager_id: managerId }, {
+                $set: {
+                    cateringMenu: [{
+                        stage_id: managerId,
+                        category_name: ['Stage Photo', 'Stage Budget', 'Stage Size'],
+                        stage_photo: imageUpload1,
+                        stage_budget: stageBudget,
+                        stage_size: stageSize
+                    }]
+                }
+            })
+            res.status(200).send({ success: true })
+        } else {
+            await serviceModel.findOneAndUpdate({ manager_id: managerId }, {
+                $push: {
+                    cateringMenu: [{
+                        stage_id: managerId,
+                        stage_photo: imageUpload1,
+                        stage_budget: stageBudget,
+                        stage_size: stageSize
+                    }]
+                }
+            })
+            res.status(200).send({ success: true })
         }
-    })
-    console.log(form);
-    res.status(200).json(form)
-    // } catch (error) {
-    //     console.log('login', error);
-    //     res.status(500).send({ message: "Error in Login", success: false, error })
-    // }
+    } catch (error) {
+        console.log('login', error);
+        res.status(500).send({ message: "Error in Login", success: false, error })
+    }
+}
+
+export const managerProfile = async (req, res) => {
+    try {
+        const managerId = req.body.managerId
+        const { name, description, imageUpload1, imageUpload2, imageUpload3 } = req.body
+        const form = await managerModel.findOneAndUpdate({ _id: managerId }, {
+            $set: {
+                name: name,
+                description: description,
+                manager_image: imageUpload1,
+                company_logo: imageUpload2,
+                recent_work: imageUpload3,
+            }
+        })
+        console.log(form);
+        res.status(200).json(form)
+    } catch (error) {
+        console.log('login', error);
+        res.status(500).send({ message: "Error in Login", success: false, error })
+    }
 }
 
 export const getDetails = async (req, res) => {

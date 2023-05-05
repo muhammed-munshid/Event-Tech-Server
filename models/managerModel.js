@@ -47,6 +47,9 @@ const managerSchema=new mongoose.Schema({
     manager_image:{
         type:Array
     },
+    company_logo: {
+        type:Array
+    },
     description: {
         type:String
     },
