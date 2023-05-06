@@ -324,7 +324,6 @@ export const addCatering = async (req, res) => {
         const { cateringData, imageUpload1, imageUpload2, imageUpload3, imageUpload4 } = req.body
         const { starterName, starterPrice, mainName, mainPrice, dessertsName, dessertsPrice, saladsName, saladsPrice } = cateringData
         console.log('bodyyyyyyg' + starterName);
-
         console.log(imageUpload1);
         let exist = false
         const existCatering = await serviceModel.findOne({ manager_id: managerId })
@@ -390,8 +389,8 @@ export const addCatering = async (req, res) => {
 export const addStage = async (req, res) => {
     try {
         const managerId = req.body.managerId
-        const { stageData, imageUpload1 } = req.body
-        const { stageBudget, stageSize } = stageData
+        const { stageDatas, imageUpload1 } = req.body
+        const { stageBudget, stageSize } = stageDatas
         console.log('bodyyyyyyg' + stageBudget);
         console.log(imageUpload1);
         let exist = false
@@ -408,7 +407,7 @@ export const addStage = async (req, res) => {
             console.log("Hellooo");
             await serviceModel.findOneAndUpdate({ manager_id: managerId }, {
                 $set: {
-                    cateringMenu: [{
+                    stageMenu: [{
                         stage_id: managerId,
                         category_name: ['Stage Photo', 'Stage Budget', 'Stage Size'],
                         stage_photo: imageUpload1,
@@ -421,7 +420,7 @@ export const addStage = async (req, res) => {
         } else {
             await serviceModel.findOneAndUpdate({ manager_id: managerId }, {
                 $push: {
-                    cateringMenu: [{
+                    stageMenu: [{
                         stage_id: managerId,
                         stage_photo: imageUpload1,
                         stage_budget: stageBudget,

@@ -293,6 +293,26 @@ export const serviceDatas = async (req, res) => {
     }
 }
 
+export const selectService = async (req, res) => {
+    try {
+        const managerId = req.params.id
+        const { foodChecked, stageChecked, decorateChecked, photographyChecked, vehicleChecked } = req.body
+        await serviceModel.findOneAndUpdate({ manager_id: managerId },{
+            $set: {
+                user_catering_status:foodChecked,
+                user_stage_status: stageChecked,
+                user_decoration_status: decorateChecked,
+                user_photography_status: photographyChecked,
+                user_vehicle_status: vehicleChecked
+            }
+        })
+        res.status(200).send({ success: true })
+    } catch (error) {
+        console.log('login', error);
+        res.status(500).send({ message: "Error in Login", success: false, error })
+    }
+}
+
 export const viewMenuList = async (req, res) => {
     try {
         const managerId = req.params.id

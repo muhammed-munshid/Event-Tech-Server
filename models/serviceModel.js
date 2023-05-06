@@ -12,10 +12,18 @@ const serviceSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
+    user_catering_status: {
+        type: Boolean,
+        default: false
+    },
     stage_name: {
         type: String
     },
     stage_status: {
+        type: Boolean,
+        default: false
+    },
+    user_stage_status: {
         type: Boolean,
         default: false
     },
@@ -26,6 +34,10 @@ const serviceSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
+    user_decoration_status: {
+        type: Boolean,
+        default: false
+    },
     photography_name: {
         type: String
     },
@@ -33,10 +45,18 @@ const serviceSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
+    user_photography_status: {
+        type: Boolean,
+        default: false
+    },
     vehicle_name: {
         type: String
     },
     vehicle_status: {
+        type: Boolean,
+        default: false
+    },
+    user_vehicle_status: {
         type: Boolean,
         default: false
     },
