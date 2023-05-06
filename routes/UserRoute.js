@@ -1,5 +1,5 @@
 import express from 'express'
-import { Otp, addProfile, companyDetails, companyList, eventForm, forgotPassword, loginGoogle, profileDetails, resend, serviceDetails, userData, userLogin, userResetPassword, userSignUp, viewMenuList } from '../controllers/userController.js'
+import { Otp, addProfile, companyDetails, companyList, eventForm, forgotPassword, loginGoogle, profileDetails, resend, serviceDatas, serviceDetails, userData, userLogin, userResetPassword, userSignUp, viewMenuList } from '../controllers/userController.js'
 import userAuth from '../middleware/userAuth.js'
 const router = express.Router()
 
@@ -15,6 +15,7 @@ router.post('/user-data',userAuth,userData)
 router.post('/company-list',userAuth,companyList)
 router.post('/company-list/:id',userAuth,companyDetails)
 router.post('/service-details',userAuth,serviceDetails)
+router.post('/services/:id', userAuth, serviceDatas)
 router.post('/view-menu-list/:id',userAuth,viewMenuList)
 router.post('/add-profile',userAuth,addProfile)
 router.post('/profile-details',userAuth,profileDetails)

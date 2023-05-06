@@ -106,7 +106,7 @@ export const loginGoogle = async (req, res) => {
         });
         console.log(ticket);
         const payload = ticket.getPayload();
-        const userid = payload["sub"];
+        const managerId = payload["sub"];
         console.log(payload);
         const userdetails = {
             email: payload.email,
@@ -133,7 +133,7 @@ export const loginGoogle = async (req, res) => {
 
 export const userData = async (req, res) => {
     try {
-        const user = await userModel.findOne({ _id: req.body.userId })
+        const user = await userModel.findOne({ _id: req.body.managerId })
         user.password = undefined
         if (!user) {
             return res
@@ -194,13 +194,13 @@ export const userResetPassword = async (req, res) => {
 
 export const eventForm = async (req, res) => {
     try {
-        const userId = req.body.userId
+        const managerId = req.body.managerId
         const userData = req.body
         const { name, email, mobile, company, date, time, count, type, pin, place } = userData
         console.log(userData)
-        const formExist = await formModel.findOne({ user_id: userId })
+        const formExist = await formModel.findOne({ user_id: managerId })
         if (formExist) {
-            await formModel.findOneAndUpdate({ user_id: userId }, {
+            await formModel.findOneAndUpdate({ user_id: managerId }, {
                 $push: {
                     form: [{
                         formName: name,
@@ -221,7 +221,7 @@ export const eventForm = async (req, res) => {
             })
         } else {
             const newForm = new formModel({
-                user_id: userId,
+                user_id: managerId,
                 form: [{
                     formName: name,
                     formEmail: email,
@@ -270,10 +270,23 @@ export const companyDetails = async (req, res) => {
 
 export const serviceDetails = async (req, res) => {
     try {
-        const userId = req.body.userId
-        console.log(userId);
-        const services = await serviceModel.findOne({ user_id: userId })
+        const managerId = req.body.managerId
+        console.log(managerId);
+        const services = await serviceModel.findOne({ user_id: managerId })
         res.status(200).send({ data: services })
+    } catch (error) {
+        console.log('login', error);
+        res.status(500).send({ message: "Error in Login", success: false, error })
+    }
+}
+
+export const serviceDatas = async (req, res) => {
+    try {
+        const managerId = req.params.id
+        const { foodChecked, stageChecked, decorateChecked, photographyChecked, vehicleChecked } = req.body
+        const serviceList = await serviceModel.findOne({ manager_id: managerId })
+        console.log(serviceList)
+        res.status(200).send({ success: true, data: serviceList })
     } catch (error) {
         console.log('login', error);
         res.status(500).send({ message: "Error in Login", success: false, error })
@@ -295,13 +308,13 @@ export const viewMenuList = async (req, res) => {
 
 export const addProfile = async (req, res) => {
     try {
-        const userId = req.body.userId
-        console.log(userId);
+        const managerId = req.body.managerId
+        console.log(managerId);
         const details = req.body
         console.log(details);
         const { name, email, mobile } = details.otherData
         const { imageUpload } = details.imageData
-        await userModel.findOneAndUpdate({ _id: userId }, {
+        await userModel.findOneAndUpdate({ _id: managerId }, {
             $set: {
                 name: name,
                 email: email,
@@ -318,9 +331,9 @@ export const addProfile = async (req, res) => {
 
 export const profileDetails = async (req, res) => {
     try {
-        const userId = req.body.userId
-        console.log(userId);
-        const user = await userModel.findOne({ _id: userId })
+        const managerId = req.body.managerId
+        console.log(managerId);
+        const user = await userModel.findOne({ _id: managerId })
         console.log("userDetails:", user)
         res.status(200).send({ data: user })
     } catch (error) {

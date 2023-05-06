@@ -238,23 +238,6 @@ export const services = async (req, res) => {
                 photography_status: photographyChecked,
                 vehicle_name: 'Luxury Vehicles',
                 vehicle_status: vehicleChecked,
-                // service_names: [{
-                //     catering: {
-                //         status: foodChecked,
-                //     },
-                //     stage: {
-                //         status: stageChecked,
-                //     },
-                //     decoration: {
-                //         status: decorateChecked,
-                //     },
-                //     photography: {
-                //         status: photographyChecked,
-                //     },
-                //     vehicle: {                    
-                //         status: vehicleChecked
-                //     }
-                // }],
                 cateringMenu: [{
                     category_name: ['Starters', 'Main', 'Desserts', 'Salads'],
                     status: foodChecked
