@@ -60,6 +60,10 @@ const serviceSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
+    status: {
+        type: Boolean,
+        default: false
+    },
     cateringMenu: [{
         catering_id: {
             type: Objectid

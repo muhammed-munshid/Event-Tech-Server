@@ -315,19 +315,6 @@ export const selectService = async (req, res) => {
     }
 }
 
-export const viewMenuList = async (req, res) => {
-    try {
-        const managerId = req.params.id
-        console.log(managerId);
-        const serviceList = await serviceModel.findOne({ manager_id: managerId })
-        console.log(serviceList);
-        res.status(200).send({ success: true, data: serviceList })
-    } catch (error) {
-        console.log('login', error);
-        res.status(500).send({ message: "Error in Login", success: false, error })
-    }
-}
-
 export const orders = (req,res) => {
     let instance = new Razorpay({key_id: process.env.KEY_ID, key_secret: process.env.KEY_SECRET})
     const amount = parseInt(req.body.amount)
@@ -357,6 +344,20 @@ export const verify = (req,res) => {
     }else {
         res.status(200).send({status:false,message: 'Sign InValid'})
     }
+}
+
+export const removeCartItem = async(req,res) => {
+    const managerId = req.params.id
+    const itemId = req.body
+    console.log('managerId',managerId);
+    await serviceModel.findOneAndUpdate({manager_id:managerId},{
+        cateringMenu: [{
+            $set: {
+
+            }
+        }]
+    })
+    res.status(200).send({status:true,message: 'Wait..'})
 }
 
 export const addProfile = async (req, res) => {
