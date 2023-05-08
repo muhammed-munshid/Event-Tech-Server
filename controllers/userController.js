@@ -6,6 +6,8 @@ import formModel from '../models/formModel.js';
 import managerModel from '../models/managerModel.js';
 import { connections } from 'mongoose';
 import serviceModel from '../models/serviceModel.js';
+import Razorpay from 'razorpay'
+import crypto from 'crypto'
 
 let Name;
 let Email;
@@ -323,6 +325,37 @@ export const viewMenuList = async (req, res) => {
     } catch (error) {
         console.log('login', error);
         res.status(500).send({ message: "Error in Login", success: false, error })
+    }
+}
+
+export const orders = (req,res) => {
+    let instance = new Razorpay({key_id: process.env.KEY_ID, key_secret: process.env.KEY_SECRET})
+    const amount = parseInt(req.body.amount)
+    console.log(typeof(amount),'amount');
+
+    let options = {
+        amount: amount * 100,
+        currency: "INR"
+    }
+
+    instance.orders.create(options, (err,order)=> {
+        if (err) {
+            return res.send({code: 500, message: 'Server Error'})
+        }
+        console.log(order,'order');
+        return res.send({code: 200, message: 'order created', data: order})
+    })
+}
+
+export const verify = (req,res) => {
+    const body = req.body.response.razorpay_order_id + "|" + req.body.response.razorpay_payment_id
+    const expectedSignature = crypto.createHmac('sha256',process.env.KEY_SECRET).update(body.toString()).digest('hex')
+    // let response = {"SignatureIsValid": "false"}
+    if (expectedSignature === req.body.response.razorpay_signature) {
+        // response= {"SignatureIsValid": "true"}
+        res.status(200).send({status:true,message: 'Sign Valid'})
+    }else {
+        res.status(200).send({status:false,message: 'Sign InValid'})
     }
 }
 
