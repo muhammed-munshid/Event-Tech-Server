@@ -1,6 +1,6 @@
 import express from 'express'
 const router = express.Router()
-import { addCatering, addStage, bookingDetails, bookings, forgetPassword, getDetails, Login, managerData, managerProfile, removeService, resendOtp, resetPassword, services, signUp, signUpWithOtp, viewServices } from '../controllers/managerController.js'
+import { addCatering, addDecorate, addPhotography, addStage, addVehicle, bookingDetails, bookings, forgetPassword, getDetails, Login, managerData, managerProfile, removeService, resendOtp, resetPassword, services, signUp, signUpWithOtp, viewServices } from '../controllers/managerController.js'
 import managerAuth from '../middleware/managerAuth.js'
 
 router.post('/', Login)
@@ -17,6 +17,9 @@ router.post('/services', managerAuth, services)
 router.post('/remove-service', managerAuth, removeService)
 router.post('/add-catering', managerAuth, addCatering)
 router.post('/add-stage', managerAuth, addStage)
+router.post('/add-decorate', managerAuth, addDecorate)
+router.post('/add-photography', managerAuth, addPhotography)
+router.post('/add-vehicle', managerAuth, addVehicle)
 router.post('/add-manager-profile', managerAuth, managerProfile)
 router.post('/get-manager-details', managerAuth, getDetails)
 

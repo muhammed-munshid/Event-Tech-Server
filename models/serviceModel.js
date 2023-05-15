@@ -16,6 +16,10 @@ const serviceSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
+    filter_catering: {
+        type: Boolean,
+        default: false
+    },
     stage_name: {
         type: String
     },
@@ -24,6 +28,10 @@ const serviceSchema = new mongoose.Schema({
         default: false
     },
     user_stage_status: {
+        type: Boolean,
+        default: false
+    },
+    filter_stage: {
         type: Boolean,
         default: false
     },
@@ -38,6 +46,10 @@ const serviceSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
+    filter_decoration: {
+        type: Boolean,
+        default: false
+    },
     photography_name: {
         type: String
     },
@@ -49,6 +61,10 @@ const serviceSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
+    filter_photography: {
+        type: Boolean,
+        default: false
+    },
     vehicle_name: {
         type: String
     },
@@ -57,6 +73,10 @@ const serviceSchema = new mongoose.Schema({
         default: false
     },
     user_vehicle_status: {
+        type: Boolean,
+        default: false
+    },
+    filter_vehicle: {
         type: Boolean,
         default: false
     },
@@ -80,6 +100,10 @@ const serviceSchema = new mongoose.Schema({
         starter_price: {
             type: String,
         },
+        starter_checked: {
+            type: Boolean,
+            default: false
+        },
         main_name: {
             type: String,
         },
@@ -88,6 +112,10 @@ const serviceSchema = new mongoose.Schema({
         },
         main_image: {
             type: Array
+        },
+        main_checked: {
+            type: Boolean,
+            default: false
         },
         dessert_name: {
             type: String,
@@ -98,11 +126,19 @@ const serviceSchema = new mongoose.Schema({
         dessert_image: {
             type: Array
         },
+        dessert_checked: {
+            type: Boolean,
+            default: false
+        },
         salad_name: {
             type: String,
         },
         salad_price: {
             type: String,
+        },
+        salad_checked: {
+            type: Boolean,
+            default: false
         },
         salad_image: {
             type: Array
@@ -134,6 +170,9 @@ const serviceSchema = new mongoose.Schema({
         }
     }],
     decorationMenu: [{
+        decoration_id: {
+            type: Objectid
+        },
         category_name: {
             type: Array
         },
@@ -152,6 +191,9 @@ const serviceSchema = new mongoose.Schema({
         }
     }],
     photographyMenu: [{
+        photography_id: {
+            type: Objectid
+        },
         category_name: {
             type: Array
         },
@@ -176,6 +218,9 @@ const serviceSchema = new mongoose.Schema({
         }
     }],
     luxuryVehicleMenu: [{
+        vehicle_id: {
+            type: Objectid
+        },
         category_name: {
             type: Array
         },

@@ -187,6 +187,7 @@ export const managerData = async (req, res) => {
 export const bookings = async (req, res) => {
     try {
         const form = await formModel.find()
+        console.log('form'+form);
         res.status(200).json(form)
     } catch (error) {
         console.log('login', error);
@@ -196,9 +197,11 @@ export const bookings = async (req, res) => {
 
 export const bookingDetails = async (req, res) => {
     try {
-        const formId = req.params.id
-        console.log(formId);
-        const forms = await formModel.findOne({ form: formId })
+        // const formId = req.params.id
+        const userId = req.body.user
+        const bookingId = req.body.bookingId
+        console.log(userId);
+        const forms = await formModel.findOne({ _id: bookingId })
         console.log(forms);
         res.status(200).send({ data: forms })
     } catch (error) {
@@ -274,8 +277,8 @@ export const removeService = async (req, res) => {
     try {
         const managerId = req.body.managerId
         const name = req.query.name
-        const serviceData = await serviceModel.findOne({manager_id: managerId})
-        if (serviceData.catering_name == name) {            
+        const serviceData = await serviceModel.findOne({ manager_id: managerId })
+        if (serviceData.catering_name == name) {
             await serviceModel.findOneAndUpdate({ manager_id: managerId }, {
                 $set: {
                     catering_status: false
@@ -435,6 +438,158 @@ export const addStage = async (req, res) => {
         res.status(500).send({ message: "Error in Login", success: false, error })
     }
 }
+
+export const addDecorate = async (req, res) => {
+    try {
+        const managerId = req.body.managerId
+        const { imageUpload1, imageUpload2, budget } = req.body
+        console.log(imageUpload1);
+        let exist = false
+        const existStage = await serviceModel.findOne({ manager_id: managerId })
+        const array = existStage.decorationMenu
+        array.forEach(element => {
+            if (element.stage_id == managerId) {
+                exist = true
+            } else {
+                exist = false
+            }
+        })
+        if (!exist) {
+            await serviceModel.findOneAndUpdate({ manager_id: managerId }, {
+                $set: {
+                    decorationMenu: [{
+                        decoration_id: managerId,
+                        category_name: ['Decoration Photo', 'Including Photos', 'Decoration Budget'],
+                        decoration_photo: imageUpload1,
+                        including_photos: imageUpload2,
+                        decoration_budget: budget
+                    }]
+                }
+            })
+            res.status(200).send({ success: true })
+        } else {
+            await serviceModel.findOneAndUpdate({ manager_id: managerId }, {
+                $push: {
+                    decorationMenu: [{
+                        decoration_id: managerId,
+                        decoration_photo: imageUpload1,
+                        including_photos: imageUpload2,
+                        decoration_budget: budget
+                    }]
+                }
+            })
+            res.status(200).send({ success: true })
+        }
+    } catch (error) {
+        console.log('login', error);
+        res.status(500).send({ message: "Error in Login", success: false, error })
+    }
+}
+
+export const addPhotography = async (req, res) => {
+    try {
+        const managerId = req.body.managerId
+        const { imageUpload1, photographyDatas } = req.body
+        console.log('bodyyyyyyg' + photographyDatas);
+        const {shopName, mobile,address,budgetPhoto} = photographyDatas
+        console.log(imageUpload1);
+        let exist = false
+        const existStage = await serviceModel.findOne({ manager_id: managerId })
+        const array = existStage.photographyMenu
+        array.forEach(element => {
+            if (element.stage_id == managerId) {
+                exist = true
+            } else {
+                exist = false
+            }
+        })
+        if (!exist) {
+            await serviceModel.findOneAndUpdate({ manager_id: managerId }, {
+                $set: {
+                    photographyMenu: [{
+                        photography_id: managerId,
+                        category_name: ['Recent Photos', 'Shop Name', 'Mobile Number','Address','Budget'],
+                        recent_photos: imageUpload1,
+                        shop_name: shopName,
+                        mobile_number: mobile,
+                        address:address,
+                        budget:budgetPhoto                        
+                    }]
+                }
+            })
+            res.status(200).send({ success: true })
+        } else {
+            await serviceModel.findOneAndUpdate({ manager_id: managerId }, {
+                $push: {
+                    photographyMenu: [{
+                        photography_id: managerId,
+                        recent_photos: imageUpload1,
+                        shop_name: shopName,
+                        mobile_number: mobile,
+                        address:address,
+                        budget:budgetPhoto                        
+                    }]
+                }
+            })
+            res.status(200).send({ success: true })
+        }
+    } catch (error) {
+        console.log('login', error);
+        res.status(500).send({ message: "Error in Login", success: false, error })
+    }
+}
+
+export const addVehicle = async (req, res) => {
+    try {
+        const managerId = req.body.managerId
+        const { imageUpload1, vehicleDatas } = req.body
+        console.log('bodyyyyyyg' + vehicleDatas);
+        const {owner, mobileNumber,rent} = vehicleDatas
+        console.log(imageUpload1);
+        let exist = false
+        const existStage = await serviceModel.findOne({ manager_id: managerId })
+        const array = existStage.luxuryVehicleMenu
+        array.forEach(element => {
+            if (element.stage_id == managerId) {
+                exist = true
+            } else {
+                exist = false
+            }
+        })
+        if (!exist) {
+            await serviceModel.findOneAndUpdate({ manager_id: managerId }, {
+                $set: {
+                    luxuryVehicleMenu: [{
+                        vehicle_id: managerId,
+                        category_name: ['Vehicle Image', 'Owner Name', 'Mobile Number','Rent Price'],
+                        vehicle_image: imageUpload1,
+                        owner_name: owner,
+                        mobile_number: mobileNumber,
+                        rent_price:rent                    
+                    }]
+                }
+            })
+            res.status(200).send({ success: true })
+        } else {
+            await serviceModel.findOneAndUpdate({ manager_id: managerId }, {
+                $push: {
+                    luxuryVehicleMenu: [{
+                        vehicle_id: managerId,
+                        vehicle_image: imageUpload1,
+                        owner_name: owner,
+                        mobile_number: mobileNumber,
+                        rent_price:rent                          
+                    }]
+                }
+            })
+            res.status(200).send({ success: true })
+        }
+    } catch (error) {
+        console.log('login', error);
+        res.status(500).send({ message: "Error in Login", success: false, error })
+    }
+}
+
 
 export const managerProfile = async (req, res) => {
     try {

@@ -1,5 +1,5 @@
 import express from 'express'
-import { Otp, addProfile, companyDetails, companyList, eventForm, forgotPassword, loginGoogle, orders, profileDetails, removeCartItem, resend, selectService, serviceDatas, serviceDetails, userData, userLogin, userResetPassword, userSignUp, verify } from '../controllers/userController.js'
+import { Otp, addProfile, cartList, companyDetails, companyList, eventForm, filterService, forgotPassword, loginGoogle, orders, profileDetails, removeCartItem, resend, selectService, serviceDatas, serviceDetails, userData, userLogin, userResetPassword, userSignUp, verify } from '../controllers/userController.js'
 import userAuth from '../middleware/userAuth.js'
 const router = express.Router()
 
@@ -14,9 +14,11 @@ router.post('/add-event',userAuth,eventForm)
 router.post('/user-data',userAuth,userData)
 router.post('/company-list',userAuth,companyList)
 router.post('/company-list/:id',userAuth,companyDetails)
-router.post('/service-details',userAuth,serviceDetails)
+router.post('/filter-service',userAuth,filterService)
+router.post('/service-details/:id',userAuth,serviceDetails)
 router.post('/services/:id', userAuth, serviceDatas)
 router.post('/select-services/:id', userAuth, selectService)
+router.post('/cart-list/:id', userAuth, cartList)
 router.post('/orders',userAuth,orders)
 router.post('/verify',userAuth,verify)
 router.post('/remove-item/:id',userAuth,removeCartItem)

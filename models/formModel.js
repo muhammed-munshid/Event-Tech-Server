@@ -20,9 +20,27 @@ const formSchema = new mongoose.Schema({
                 type: Number,
                 required: true
             },
-            company: {
+            address: {
+                type:String
+            },
+            pin: {
+                type: Number,
+                required: true
+            },
+            state: {
+                type:String
+            },
+            district: {
+                type:String
+            },
+            place: {
                 type: String,
                 required: true
+            }
+        }],
+        orderDetails: [{
+            totalPrice: {
+                type:Number
             },
             date: {
                 type: Date,
@@ -40,14 +58,6 @@ const formSchema = new mongoose.Schema({
                 type: String,
                 required: true
             },
-            pin: {
-                type: Number,
-                required: true
-            },
-            place: {
-                type: String,
-                required: true
-            }
         }]
 })
 
