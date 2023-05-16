@@ -25,5 +25,8 @@
     "nodemon": "^2.0.22",
     "razorpay": "^2.8.6",
     "twilio": "^4.9.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.40.0"
   }
 }

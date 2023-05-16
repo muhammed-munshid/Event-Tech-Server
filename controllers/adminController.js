@@ -34,7 +34,6 @@ export const notification = async (req, res) => {
 export const users = async (req, res) => {
     try {
         const users = await userModel.find()
-        console.log(users);
         res.status(200).json(users)
     } catch (error) {
         console.log('error', error);
@@ -80,9 +79,7 @@ export const managers = async (req, res) => {
 export const blockManager = async (req, res) => {
     try {
         const block = req.body.block
-        console.log(block);
         const managerId = req.query.managerId
-        console.log(managerId);
         if (block) {
             await managerModel.findOneAndUpdate({ _id: managerId }, {
                 $set: {
@@ -107,9 +104,7 @@ export const blockManager = async (req, res) => {
 export const managerDetails = async (req, res) => {
     try {
         const managerId = req.params.id
-        console.log(managerId);
         const manager = await managerModel.findOne({ _id: managerId })
-        console.log("managerDetails:",manager);
         res.status(200).send({ data: manager })
     } catch (error) {
         console.log('login', error);
@@ -145,7 +140,6 @@ export const approvalList = async (req, res) => {
 export const salesReport = async (req, res) => {
     try {
         const forms = await formModel.find()
-        console.log(forms);
         res.status(200).json(forms)
     } catch (error) {
         console.log('login', error);

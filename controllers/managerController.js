@@ -21,10 +21,7 @@ let forgetMobile;
 
 export const signUp = async (req, res) => {
     try {
-        console.log('Hii');
         const { managerData, imageData } = req.body
-        console.log(imageData);
-        console.log(managerData);
         const { name, email, mobile, company, address, pincode, state, district, place, password } = managerData
         Name = name
         Email = email
@@ -132,7 +129,6 @@ export const Login = async (req, res) => {
     try {
         const { email, password } = req.body
         const manager = await managerModel.findOne({ email: email })
-        console.log('manager:' + manager);
         if (manager) {
             const isMatchPswrd = await bcrypt.compare(password, manager.password)
             if (manager.approval) {
@@ -165,7 +161,6 @@ export const Login = async (req, res) => {
 export const managerData = async (req, res) => {
     try {
         const manager = await managerModel.findOne({ _id: req.body.managerId })
-        console.log(manager);
         manager.password = undefined
         if (!manager) {
             return res
@@ -187,7 +182,6 @@ export const managerData = async (req, res) => {
 export const bookings = async (req, res) => {
     try {
         const form = await formModel.find()
-        console.log('form'+form);
         res.status(200).json(form)
     } catch (error) {
         console.log('login', error);
@@ -198,9 +192,7 @@ export const bookings = async (req, res) => {
 export const bookingDetails = async (req, res) => {
     try {
         const userId = req.params.id
-        console.log(userId);
         const forms = await formModel.findOne({ user_id: userId })
-        console.log(forms);
         res.status(200).send({ data: forms })
     } catch (error) {
         console.log('login', error);
@@ -211,9 +203,7 @@ export const bookingDetails = async (req, res) => {
 export const viewServices = async (req, res) => {
     try {
         const managerId = req.body.managerId
-        console.log(managerId);
         const serviceList = await serviceModel.findOne({ manager_id: managerId })
-        console.log(serviceList);
         res.status(200).send({ success: true, data: serviceList })
     } catch (error) {
         console.log('login', error);
@@ -324,8 +314,6 @@ export const addCatering = async (req, res) => {
         const managerId = req.body.managerId
         const { cateringData, imageUpload1, imageUpload2, imageUpload3, imageUpload4 } = req.body
         const { starterName, starterPrice, mainName, mainPrice, dessertsName, dessertsPrice, saladsName, saladsPrice } = cateringData
-        console.log('bodyyyyyyg' + starterName);
-        console.log(imageUpload1);
         let exist = false
         const existCatering = await serviceModel.findOne({ manager_id: managerId })
         const array = existCatering.cateringMenu
@@ -337,7 +325,6 @@ export const addCatering = async (req, res) => {
             }
         })
         if (!exist) {
-            console.log("Hellooo");
             await serviceModel.findOneAndUpdate({ manager_id: managerId }, {
                 $set: {
                     cateringMenu: [{
@@ -392,8 +379,6 @@ export const addStage = async (req, res) => {
         const managerId = req.body.managerId
         const { stageDatas, imageUpload1 } = req.body
         const { stageBudget, stageSize } = stageDatas
-        console.log('bodyyyyyyg' + stageBudget);
-        console.log(imageUpload1);
         let exist = false
         const existStage = await serviceModel.findOne({ manager_id: managerId })
         const array = existStage.stageMenu
@@ -405,7 +390,6 @@ export const addStage = async (req, res) => {
             }
         })
         if (!exist) {
-            console.log("Hellooo");
             await serviceModel.findOneAndUpdate({ manager_id: managerId }, {
                 $set: {
                     stageMenu: [{
@@ -441,7 +425,6 @@ export const addDecorate = async (req, res) => {
     try {
         const managerId = req.body.managerId
         const { imageUpload1, imageUpload2, budget } = req.body
-        console.log(imageUpload1);
         let exist = false
         const existStage = await serviceModel.findOne({ manager_id: managerId })
         const array = existStage.decorationMenu
@@ -479,7 +462,7 @@ export const addDecorate = async (req, res) => {
             res.status(200).send({ success: true })
         }
     } catch (error) {
-        console.log('login', error);
+        console.log(error);
         res.status(500).send({ message: "Error in Login", success: false, error })
     }
 }
@@ -488,9 +471,7 @@ export const addPhotography = async (req, res) => {
     try {
         const managerId = req.body.managerId
         const { imageUpload1, photographyDatas } = req.body
-        console.log('bodyyyyyyg' + photographyDatas);
         const {shopName, mobile,address,budgetPhoto} = photographyDatas
-        console.log(imageUpload1);
         let exist = false
         const existStage = await serviceModel.findOne({ manager_id: managerId })
         const array = existStage.photographyMenu
@@ -541,9 +522,7 @@ export const addVehicle = async (req, res) => {
     try {
         const managerId = req.body.managerId
         const { imageUpload1, vehicleDatas } = req.body
-        console.log('bodyyyyyyg' + vehicleDatas);
         const {owner, mobileNumber,rent} = vehicleDatas
-        console.log(imageUpload1);
         let exist = false
         const existStage = await serviceModel.findOne({ manager_id: managerId })
         const array = existStage.luxuryVehicleMenu
@@ -602,7 +581,6 @@ export const managerProfile = async (req, res) => {
                 recent_work: imageUpload3,
             }
         })
-        console.log(form);
         res.status(200).json(form)
     } catch (error) {
         console.log('login', error);
@@ -611,13 +589,12 @@ export const managerProfile = async (req, res) => {
 }
 
 export const getDetails = async (req, res) => {
-    // try {
+    try {
     const managerId = req.body.managerId
     const details = await managerModel.findOne({ _id: managerId })
-    console.log(details);
     res.status(200).json(details)
-    // } catch (error) {
-    //     console.log('login', error);
-    //     res.status(500).send({ message: "Error in Login", success: false, error })
-    // }
+    } catch (error) {
+        console.log('login', error);
+        res.status(500).send({ message: "Error in Login", success: false, error })
+    }
 }
