@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken';
 import managerModel from '../models/managerModel.js';
 import formModel from '../models/formModel.js';
 import serviceModel from '../models/serviceModel.js';
+import cartModel from '../models/cartModel.js';
 
 let Name;
 let Email;
@@ -193,7 +194,8 @@ export const bookingDetails = async (req, res) => {
     try {
         const userId = req.params.id
         const forms = await formModel.findOne({ user_id: userId })
-        res.status(200).send({ data: forms })
+        const cartData = await cartModel.findOne({user_id: userId})
+        res.status(200).json({ forms,cartData})
     } catch (error) {
         console.log('login', error);
         res.status(500).send({ message: "Error in Login", success: false, error })

@@ -34,6 +34,36 @@ const cartSchema=new mongoose.Schema({
             type:Boolean,
             default:false
         }
+    }],
+    desserts: [{
+        category_image:{
+            type:Array
+        },
+        category_name:{
+            type:String
+        },
+        category_price:{
+            type:Number
+        },
+        status: {
+            type:Boolean,
+            default:false
+        }
+    }],
+    salads: [{
+        category_image:{
+            type:Array
+        },
+        category_name:{
+            type:String
+        },
+        category_price:{
+            type:Number
+        },
+        status: {
+            type:Boolean,
+            default:false
+        }
     }]
 })
 

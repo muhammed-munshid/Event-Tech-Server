@@ -31,6 +31,22 @@ export const notification = async (req, res) => {
     }
 }
 
+export const dashboard = async (req, res) => {
+    try {
+        const users = await userModel.find()
+        const approved = await managerModel.find({approval:true})
+        const managers = await managerModel.find()
+        const userLength = users.length
+        const approvedLength = approved.length
+        const managerLength = managers.length
+        res.status(200).json({userLength,approvedLength,managerLength})
+    } catch (error) {
+        console.log('error', error);
+        res.status(500).send({ message: "Error in Login", success: false, error })
+    }
+}
+
+
 export const users = async (req, res) => {
     try {
         const users = await userModel.find()

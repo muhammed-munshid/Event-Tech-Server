@@ -103,7 +103,6 @@ export const loginGoogle = async (req, res) => {
             //[CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3]
         });
         const payload = ticket.getPayload();
-        const managerId = payload["sub"];
         const userdetails = {
             email: payload.email,
             name: payload.name,
@@ -189,7 +188,7 @@ export const eventForm = async (req, res) => {
     try {
         const userId = req.body.userId
         const userData = req.body
-        const { name, email, mobile, address, date, time, count, type, pin,state,district, place, grandTotal } = userData
+        const { name, email, mobile, address, date, time, count, type, pin, state, district, place, grandTotal } = userData
         const formDate = new Date(date);
         const formExist = await formModel.findOne({ user_id: userId })
         if (formExist) {
@@ -199,12 +198,12 @@ export const eventForm = async (req, res) => {
                         formName: name,
                         formEmail: email,
                         formMobile: mobile,
-                        address:address,
+                        address: address,
                         pin: pin,
-                        state:state,
-                        district:district,
+                        state: state,
+                        district: district,
                         place: place,
-                        totalPrice:grandTotal,
+                        totalPrice: grandTotal,
                         event_date: formDate,
                         date: new Date(),
                         time: time,
@@ -222,12 +221,12 @@ export const eventForm = async (req, res) => {
                     formName: name,
                     formEmail: email,
                     formMobile: mobile,
-                    address:address,
+                    address: address,
                     pin: pin,
-                    state:state,
-                    district:district,
+                    state: state,
+                    district: district,
                     place: place,
-                    totalPrice:grandTotal,
+                    totalPrice: grandTotal,
                     event_date: formDate,
                     date: new Date(),
                     time: time,
@@ -285,7 +284,6 @@ export const serviceDetails = async (req, res) => {
 export const serviceDatas = async (req, res) => {
     try {
         const managerId = req.params.id
-        const { foodChecked, stageChecked, decorateChecked, photographyChecked, vehicleChecked } = req.body
         const serviceList = await serviceModel.findOne({ manager_id: managerId })
         res.status(200).send({ success: true, data: serviceList })
     } catch (error) {
@@ -316,10 +314,9 @@ export const selectService = async (req, res) => {
 
 export const cartList = async (req, res) => {
     try {
-        const managerId = req.params.id
         const userId = req.body.userId
-        const { datas1, datas2 } = req.body
-        const categoryNames = { datas1, datas2 }
+        const { datas1, datas2, datas3, datas4 } = req.body
+        const categoryNames = { datas1, datas2, datas3, datas4 }
         const carts = new cartModel({
             user_id: userId
         })
@@ -336,12 +333,34 @@ export const cartList = async (req, res) => {
             })
         });
         categoryNames.datas2.forEach((element) => {
-            const carts = cartModel.findOneAndUpdate({ user_id: userId }, {
+            cartModel.findOneAndUpdate({ user_id: userId }, {
                 $push: {
                     mains: [{
                         category_name: element.main_name,
                         category_price: element.main_price,
                         category_image: element.main_image,
+                    }]
+                }
+            })
+        });
+        categoryNames.datas3.forEach(element => {
+            cartModel.findOneAndUpdate({ user_id: userId }, {
+                $push: {
+                    desserts: [{
+                        category_name: element.dessert_name,
+                        category_price: element.dessert_price,
+                        category_image: element.dessert_image,
+                    }]
+                }
+            })
+        });
+        categoryNames.datas4.forEach((element) => {
+             cartModel.findOneAndUpdate({ user_id: userId }, {
+                $push: {
+                    salads: [{
+                        category_name: element.salad_name,
+                        category_price: element.salad_price,
+                        category_image: element.salad_image,
                     }]
                 }
             })

@@ -1,7 +1,8 @@
 import express from 'express';
-import { adminLogin, approvalList, approvalManager, blockManager, blockUser, managerDetails, managers, salesReport, users } from '../controllers/adminController.js';
+import { adminLogin, approvalList, approvalManager, blockManager, blockUser, dashboard, managerDetails, managers, salesReport, users } from '../controllers/adminController.js';
 const router = express.Router()
 
+router.get('/dashboard', dashboard)
 router.get('/users', users)
 router.get('/managers', managers)
 router.get('/approval-list', approvalList)
