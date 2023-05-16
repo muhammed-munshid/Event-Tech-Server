@@ -1,3 +1,4 @@
+import formModel from '../models/formModel.js';
 import managerModel from '../models/managerModel.js';
 import userModel from '../models/userModel.js';
 
@@ -135,6 +136,17 @@ export const approvalList = async (req, res) => {
     try {
         const manager = await managerModel.find({approval:true})
         res.status(200).json(manager)
+    } catch (error) {
+        console.log('login', error);
+        res.status(500).send({ message: "Error in Login", success: false, error })
+    }
+}
+
+export const salesReport = async (req, res) => {
+    try {
+        const forms = await formModel.find()
+        console.log(forms);
+        res.status(200).json(forms)
     } catch (error) {
         console.log('login', error);
         res.status(500).send({ message: "Error in Login", success: false, error })

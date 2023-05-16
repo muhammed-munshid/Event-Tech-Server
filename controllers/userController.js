@@ -19,6 +19,7 @@ let forgetMobile;
 
 export const userSignUp = async (req, res) => {
     try {
+        console.log('Hello');
         let userData = req.body
         console.log(userData);
         const { name, email, mobile, password } = req.body
@@ -214,11 +215,10 @@ export const eventForm = async (req, res) => {
                         pin: pin,
                         state:state,
                         district:district,
-                        place: place
-                    }],
-                    orderDetails : [{
+                        place: place,
                         totalPrice:grandTotal,
-                        date: formDate,
+                        event_date: formDate,
+                        date: new Date(),
                         time: time,
                         count: count,
                         type: type,
@@ -239,11 +239,10 @@ export const eventForm = async (req, res) => {
                     pin: pin,
                     state:state,
                     district:district,
-                    place: place
-                }],
-                orderDetails : [{
+                    place: place,
                     totalPrice:grandTotal,
-                    date: formDate,
+                    event_date: formDate,
+                    date: new Date(),
                     time: time,
                     count: count,
                     type: type,

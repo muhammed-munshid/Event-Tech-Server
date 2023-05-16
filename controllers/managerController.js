@@ -197,11 +197,9 @@ export const bookings = async (req, res) => {
 
 export const bookingDetails = async (req, res) => {
     try {
-        // const formId = req.params.id
-        const userId = req.body.user
-        const bookingId = req.body.bookingId
+        const userId = req.params.id
         console.log(userId);
-        const forms = await formModel.findOne({ _id: bookingId })
+        const forms = await formModel.findOne({ user_id: userId })
         console.log(forms);
         res.status(200).send({ data: forms })
     } catch (error) {

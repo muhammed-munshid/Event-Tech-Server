@@ -36,15 +36,19 @@ const formSchema = new mongoose.Schema({
             place: {
                 type: String,
                 required: true
-            }
-        }],
-        orderDetails: [{
+            },
+            totalAmount: {
+                type:Number
+            },
             totalPrice: {
                 type:Number
             },
-            date: {
+            event_date: {
                 type: Date,
                 required: true
+            },
+            date: {
+                type: Date
             },
             time: {
                 type: String,
