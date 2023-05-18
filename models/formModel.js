@@ -62,6 +62,9 @@ const formSchema = new mongoose.Schema({
                 type: String,
                 required: true
             },
+            items: {
+                type:Array
+            }
         }]
 })
 

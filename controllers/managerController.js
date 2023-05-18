@@ -192,10 +192,17 @@ export const bookings = async (req, res) => {
 
 export const bookingDetails = async (req, res) => {
     try {
-        const userId = req.params.id
+        const id = req.params.id
+        console.log(id);
+        const userId = req.body.userId
         const forms = await formModel.findOne({ user_id: userId })
-        const cartData = await cartModel.findOne({user_id: userId})
-        res.status(200).json({ forms,cartData})
+        const form = forms.form
+        // const cartData = await cartModel.findOne({user_id: userId})
+        form.forEach(elements => {
+            if (elements._id == id) {
+                res.status(200).json({elements})
+            }
+        });
     } catch (error) {
         console.log('login', error);
         res.status(500).send({ message: "Error in Login", success: false, error })

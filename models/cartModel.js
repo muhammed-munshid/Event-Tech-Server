@@ -64,6 +64,66 @@ const cartSchema=new mongoose.Schema({
             type:Boolean,
             default:false
         }
+    }],
+    stages: [{
+        category_image:{
+            type:Array
+        },
+        category_name:{
+            type:String
+        },
+        category_price:{
+            type:Number
+        },
+        status: {
+            type:Boolean,
+            default:false
+        }
+    }],
+    decorates: [{
+        category_image:{
+            type:Array
+        },
+        category_name:{
+            type:String
+        },
+        category_price:{
+            type:Number
+        },
+        status: {
+            type:Boolean,
+            default:false
+        }
+    }],
+    photos: [{
+        category_image:{
+            type:Array
+        },
+        category_name:{
+            type:String
+        },
+        category_price:{
+            type:Number
+        },
+        status: {
+            type:Boolean,
+            default:false
+        }
+    }],
+    vehicles: [{
+        category_image:{
+            type:Array
+        },
+        category_name:{
+            type:String
+        },
+        category_price:{
+            type:Number
+        },
+        status: {
+            type:Boolean,
+            default:false
+        }
     }]
 })
 
