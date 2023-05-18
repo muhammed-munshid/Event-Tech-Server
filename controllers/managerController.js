@@ -4,6 +4,7 @@ import managerModel from '../models/managerModel.js';
 import formModel from '../models/formModel.js';
 import serviceModel from '../models/serviceModel.js';
 import cartModel from '../models/cartModel.js';
+import userModel from '../models/userModel.js';
 
 let Name;
 let Email;
@@ -179,6 +180,22 @@ export const managerData = async (req, res) => {
             .send({ message: "Error getting user info", error: true, error })
     }
 }
+
+export const dashboard = async (req, res) => {
+    console.log('Hey');
+    try {
+        const users = await userModel.find()
+        console.log(users);
+        const forms = await formModel.find()
+        const userLength = users.length
+        const formLength =forms.length
+        res.status(200).json({userLength,formLength})
+    } catch (error) {
+        console.log('login', error);
+        res.status(500).send({ message: "Error in Login", success: false, error })
+    }
+}
+
 
 export const bookings = async (req, res) => {
     try {
