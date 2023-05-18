@@ -5,126 +5,129 @@ const cartSchema=new mongoose.Schema({
     user_id:{
         type:Objectid
     },
-    starters: [{
-        category_image:{
-            type:Array
-        },
-        category_name:{
-            type:String
-        },
-        category_price:{
-            type:Number
-        },
-        status: {
-            type:Boolean,
-            default:false
-        }
-    }],
-    mains: [{
-        category_image:{
-            type:Array
-        },
-        category_name:{
-            type:String
-        },
-        category_price:{
-            type:Number
-        },
-        status: {
-            type:Boolean,
-            default:false
-        }
-    }],
-    desserts: [{
-        category_image:{
-            type:Array
-        },
-        category_name:{
-            type:String
-        },
-        category_price:{
-            type:Number
-        },
-        status: {
-            type:Boolean,
-            default:false
-        }
-    }],
-    salads: [{
-        category_image:{
-            type:Array
-        },
-        category_name:{
-            type:String
-        },
-        category_price:{
-            type:Number
-        },
-        status: {
-            type:Boolean,
-            default:false
-        }
-    }],
-    stages: [{
-        category_image:{
-            type:Array
-        },
-        category_name:{
-            type:String
-        },
-        category_price:{
-            type:Number
-        },
-        status: {
-            type:Boolean,
-            default:false
-        }
-    }],
-    decorates: [{
-        category_image:{
-            type:Array
-        },
-        category_name:{
-            type:String
-        },
-        category_price:{
-            type:Number
-        },
-        status: {
-            type:Boolean,
-            default:false
-        }
-    }],
-    photos: [{
-        category_image:{
-            type:Array
-        },
-        category_name:{
-            type:String
-        },
-        category_price:{
-            type:Number
-        },
-        status: {
-            type:Boolean,
-            default:false
-        }
-    }],
-    vehicles: [{
-        category_image:{
-            type:Array
-        },
-        category_name:{
-            type:String
-        },
-        category_price:{
-            type:Number
-        },
-        status: {
-            type:Boolean,
-            default:false
-        }
-    }]
+    categories: {
+        type:Array
+    }
+    // starters: [{
+    //     category_image:{
+    //         type:Array
+    //     },
+    //     category_name:{
+    //         type:String
+    //     },
+    //     category_price:{
+    //         type:Number
+    //     },
+    //     status: {
+    //         type:Boolean,
+    //         default:false
+    //     }
+    // }],
+    // mains: [{
+    //     category_image:{
+    //         type:Array
+    //     },
+    //     category_name:{
+    //         type:String
+    //     },
+    //     category_price:{
+    //         type:Number
+    //     },
+    //     status: {
+    //         type:Boolean,
+    //         default:false
+    //     }
+    // }],
+    // desserts: [{
+    //     category_image:{
+    //         type:Array
+    //     },
+    //     category_name:{
+    //         type:String
+    //     },
+    //     category_price:{
+    //         type:Number
+    //     },
+    //     status: {
+    //         type:Boolean,
+    //         default:false
+    //     }
+    // }],
+    // salads: [{
+    //     category_image:{
+    //         type:Array
+    //     },
+    //     category_name:{
+    //         type:String
+    //     },
+    //     category_price:{
+    //         type:Number
+    //     },
+    //     status: {
+    //         type:Boolean,
+    //         default:false
+    //     }
+    // }],
+    // stages: [{
+    //     category_image:{
+    //         type:Array
+    //     },
+    //     category_name:{
+    //         type:String
+    //     },
+    //     category_price:{
+    //         type:Number
+    //     },
+    //     status: {
+    //         type:Boolean,
+    //         default:false
+    //     }
+    // }],
+    // decorates: [{
+    //     category_image:{
+    //         type:Array
+    //     },
+    //     category_name:{
+    //         type:String
+    //     },
+    //     category_price:{
+    //         type:Number
+    //     },
+    //     status: {
+    //         type:Boolean,
+    //         default:false
+    //     }
+    // }],
+    // photos: [{
+    //     category_image:{
+    //         type:Array
+    //     },
+    //     category_name:{
+    //         type:String
+    //     },
+    //     category_price:{
+    //         type:Number
+    //     },
+    //     status: {
+    //         type:Boolean,
+    //         default:false
+    //     }
+    // }],
+    // vehicles: [{
+    //     category_image:{
+    //         type:Array
+    //     },
+    //     category_name:{
+    //         type:String
+    //     },
+    //     category_price:{
+    //         type:Number
+    //     },
+    //     status: {
+    //         type:Boolean,
+    //         default:false
+    //     }
+    // }]
 })
 
 

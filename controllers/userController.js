@@ -318,130 +318,48 @@ export const selectService = async (req, res) => {
 export const cartList = async (req, res) => {
     try {
         const userId = req.body.userId
-        console.log(req.body, 'req.body');
-        const { datas1, datas2, datas3, datas4, datas5, datas6, datas7, datas8 } = req.body
-        const categoryNames = { datas1, datas2, datas3, datas4, datas5, datas6, datas7, datas8 }
-        // const cartUpdates = {};
-        Object.keys(categoryNames).forEach((key) => {
-            const elements = categoryNames[key];
-            // console.log( 'elements',elements);
-            const categories = {
-                starters: ['starter_name', 'starter_image', 'starter_price'],
-                mains: ['main_name', 'main_image', 'main_price'],
-                desserts: ['dessert_name', 'dessert_image', 'dessert_price'],
-                salads: ['salad_name', 'salad_image', 'salad_price'],
-                stages: ['stage_name', 'stage_image', 'stage_price'],
-                decorates: ['decorate_name', 'decorate_image', 'decorate_price']
-            };
-
-            const result = Object.entries(categories).reduce((acc, [category, properties]) => {
-                acc[category] = {}; // Initialize the category object
-                properties.forEach(property => {
-                  const propName = property.split('_')[0];
-                  const value = elements.map(element => element[property]?.[0]);
-                  if (value.some(v => v !== undefined)) {
-                    acc[category][propName] = value;
-                  }
-                });
-                return acc;
-              }, {});
-              console.log('result:',result);
-        });
-
-        // const carts = new cartModel({
-        //     user_id: userId,
-        //     ...cartUpdates
-        // })
-        // carts.save()
-        // console.log(carts);
-        // categoryNames.datas1.forEach(async(element) => {
-        //     await cartModel.findOneAndUpdate({ user_id: userId }, {
-        //         $push: {
-        //             starters: [{
-        //                 category_name: element.starter_name,
-        //                 category_price: element.starter_price,
-        //                 category_image: element.starter_image,
-        //             }]
-        //         }
-        //     })
-        // });
-        // categoryNames.datas2.forEach(async(element) => {
-        //     await cartModel.findOneAndUpdate({ user_id: userId }, {
-        //         $push: {
-        //             mains: [{
-        //                 category_name: element.main_name,
-        //                 category_price: element.main_price,
-        //                 category_image: element.main_image,
-        //             }]
-        //         }
-        //     })
-        // });
-        // categoryNames.datas3.forEach(async(element) => {
-        //     await cartModel.findOneAndUpdate({ user_id: userId }, {
-        //         $push: {
-        //             desserts: [{
-        //                 category_name: element.dessert_name,
-        //                 category_price: element.dessert_price,
-        //                 category_image: element.dessert_image,
-        //             }]
-        //         }
-        //     })
-        // });
-        // categoryNames.datas4.forEach(async(element) => {
-        //     await cartModel.findOneAndUpdate({ user_id: userId }, {
-        //         $push: {
-        //             salads: [{
-        //                 category_name: element.salad_name,
-        //                 category_price: element.salad_price,
-        //                 category_image: element.salad_image,
-        //             }]
-        //         }
-        //     })
-        // });
-        // categoryNames.datas5.forEach(async(element) => {
-        //     await cartModel.findOneAndUpdate({ user_id: userId }, {
-        //         $push: {
-        //             stages: [{
-        //                 category_name: element.stage_name,
-        //                 category_price: element.stage_price,
-        //                 category_image: element.stage_image,
-        //             }]
-        //         }
-        //     })
-        // });
-        // categoryNames.datas6.forEach(async(element) => {
-        //     await cartModel.findOneAndUpdate({ user_id: userId }, {
-        //         $push: {
-        //             decorates: [{
-        //                 category_name: element.decorate_name,
-        //                 category_price: element.decorate_price,
-        //                 category_image: element.decorate_image,
-        //             }]
-        //         }
-        //     })
-        // });
-        // categoryNames.datas7.forEach(async(element) => {
-        //     await cartModel.findOneAndUpdate({ user_id: userId }, {
-        //         $push: {
-        //             photos: [{
-        //                 category_name: element.photo_name,
-        //                 category_price: element.photo_price,
-        //                 category_image: element.photo_image,
-        //             }]
-        //         }
-        //     })
-        // });
-        // categoryNames.datas8.forEach(async(element) => {
-        //     await cartModel.findOneAndUpdate({ user_id: userId }, {
-        //         $push: {
-        //             vehicles: [{
-        //                 category_name: element.vehicle_name,
-        //                 category_price: element.vehicle_price,
-        //                 category_image: element.vehicle_image,
-        //             }]
-        //         }
-        //     })
-        // });
+        const cart = []
+        let z = 0
+        for (let i = 0; i < req.body.datas1.length; i++) {
+            cart[z] = req.body.datas1[i]
+            z++
+        }
+        for (let i = 0; i < req.body.datas2.length; i++) {
+            cart[z] = req.body.datas2[i]
+            z++
+        }
+        for (let i = 0; i < req.body.datas3.length; i++) {
+            cart[z] = req.body.datas3[i]
+            z++
+        }
+        for (let i = 0; i < req.body.datas4.length; i++) {
+            cart[z] = req.body.datas4[i]
+            z++
+        }
+        for (let i = 0; i < req.body.datas5.length; i++) {
+            cart[z] = req.body.datas5[i]
+            z++
+        }
+        for (let i = 0; i < req.body.datas6.length; i++) {
+            cart[z] = req.body.datas6[i]
+            z++
+        }
+        for (let i = 0; i < req.body.datas7.length; i++) {
+            cart[z] = req.body.datas7[i]
+            z++
+        }
+        for (let i = 0; i < req.body.datas8.length; i++) {
+            cart[z] = req.body.datas8[i]
+            z++
+        }
+        console.log(cart, 'cart');
+        if (cart.length != 0) {
+            const carts = new cartModel({
+                user_id: userId,
+                categories: cart
+            })
+            carts.save()
+        }
         res.status(200).send({ success: true })
     } catch (error) {
         console.log('login', error);
@@ -490,6 +408,35 @@ export const removeCartItem = async (req, res) => {
     })
     res.status(200).send({ status: true, message: 'Wait..' })
 }
+
+export const bookings = async (req, res) => {
+    try {
+        const form = await formModel.find()
+        res.status(200).json(form)
+    } catch (error) {
+        console.log('login', error);
+        res.status(500).send({ message: "Error in Login", success: false, error })
+    }
+}
+
+export const bookingDetails = async (req, res) => {
+    try {
+        const id = req.params.id
+        console.log(id);
+        const userId = req.body.userId
+        const forms = await formModel.findOne({ user_id: userId })
+        const form = forms.form
+        form.forEach(elements => {
+            if (elements._id == id) {
+                res.status(200).json({elements})
+            }
+        });
+    } catch (error) {
+        console.log('login', error);
+        res.status(500).send({ message: "Error in Login", success: false, error })
+    }
+}
+
 
 export const addProfile = async (req, res) => {
     try {

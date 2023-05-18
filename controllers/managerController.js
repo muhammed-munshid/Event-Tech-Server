@@ -197,7 +197,6 @@ export const bookingDetails = async (req, res) => {
         const userId = req.body.userId
         const forms = await formModel.findOne({ user_id: userId })
         const form = forms.form
-        // const cartData = await cartModel.findOne({user_id: userId})
         form.forEach(elements => {
             if (elements._id == id) {
                 res.status(200).json({elements})
