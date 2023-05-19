@@ -131,7 +131,7 @@ export const managerDetails = async (req, res) => {
 export const approvalManager = async (req, res) => {
     try {
         const managerId = req.query.managerId
-        const managers = await managerModel.findOneAndUpdate({_id:managerId},{
+        await managerModel.findOneAndUpdate({_id:managerId},{
             $set: {
                 approval:true
             }

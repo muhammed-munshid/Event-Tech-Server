@@ -3,7 +3,6 @@ import jwt from 'jsonwebtoken';
 import managerModel from '../models/managerModel.js';
 import formModel from '../models/formModel.js';
 import serviceModel from '../models/serviceModel.js';
-import cartModel from '../models/cartModel.js';
 import userModel from '../models/userModel.js';
 
 let Name;
@@ -140,6 +139,7 @@ export const Login = async (req, res) => {
                     if (!isMatchPswrd) {
                         res.status(200).send({ message: "Incorrect Password", noUser: false })
                     } else {
+                        // eslint-disable-next-line no-undef
                         const token = jwt.sign({ id: manager._id }, process.env.JWT_SECRET, {
                             expiresIn: '1d'
                         }) //the jwt.sign() will generate the token,the expiresIn is for destory the session
@@ -177,7 +177,7 @@ export const managerData = async (req, res) => {
     } catch (error) {
         res
             .status(500)
-            .send({ message: "Error getting user info", error: true, error })
+            .send({ message: "Error getting user info", error: true })
     }
 }
 
