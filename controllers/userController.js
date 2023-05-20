@@ -77,6 +77,7 @@ export const userLogin = async (req, res) => {
                 if (!isMatchPswrd) {
                     res.status(200).send({ message: "Incorrect Password", noUser: false })
                 } else {
+                    // eslint-disable-next-line no-undef
                     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
                         expiresIn: '1d'
                     }) //the jwt.sign() will generate the token,the expiresIn is for destory the session
@@ -95,9 +96,11 @@ export const userLogin = async (req, res) => {
 export const loginGoogle = async (req, res) => {
     try {
         const googleToken = req.params.id
+        // eslint-disable-next-line no-undef
         const client = new OAuth2Client(process.env.CLIENT_ID)
         const ticket = await client.verifyIdToken({
             idToken: googleToken,
+            // eslint-disable-next-line no-undef
             audience: process.env.CLIENT_ID, // Specify the CLIENT_ID of the app that accesses the backend
             // Or, if multiple clients access the backend:
             //[CLIENT_ID_1, CLIENT_ID_2, CLIENT_ID_3]
@@ -213,7 +216,7 @@ export const eventForm = async (req, res) => {
                         items: items
                     }]
                 }
-            }).then((response) => {
+            }).then(() => {
                 res.status(200).send({ success: true, message: 'success' })
             })
         } else {
@@ -267,6 +270,19 @@ export const companyDetails = async (req, res) => {
         const managerId = req.params.id
         const manager = await managerModel.findOne({ _id: managerId })
         res.status(200).send({ data: manager })
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({ message: "Error in Login", success: false, error })
+    }
+}
+
+export const filterLocation = async (req, res) => {
+    try {
+        const name = req.body.name
+        console.log(name);
+        const manager = await managerModel.find({$rejex:name})
+        console.log(manager);
+        res.status(200).send()
     } catch (error) {
         console.log(error);
         res.status(500).send({ message: "Error in Login", success: false, error })
@@ -369,6 +385,7 @@ export const cartList = async (req, res) => {
 
 export const orders = (req, res) => {
     try {
+        // eslint-disable-next-line no-undef
         let instance = new Razorpay({ key_id: process.env.KEY_ID, key_secret: process.env.KEY_SECRET })
         const amount = parseInt(req.body.amount)
         let options = {
@@ -388,6 +405,7 @@ export const orders = (req, res) => {
 
 export const verify = (req, res) => {
     const body = req.body.response.razorpay_order_id + "|" + req.body.response.razorpay_payment_id
+    // eslint-disable-next-line no-undef
     const expectedSignature = crypto.createHmac('sha256', process.env.KEY_SECRET).update(body.toString()).digest('hex')
     if (expectedSignature === req.body.response.razorpay_signature) {
         res.status(200).send({ status: true, message: 'Sign Valid' })
@@ -398,7 +416,7 @@ export const verify = (req, res) => {
 
 export const removeCartItem = async (req, res) => {
     const managerId = req.params.id
-    const itemId = req.body
+    // const itemId = req.body
     await serviceModel.findOneAndUpdate({ manager_id: managerId }, {
         cateringMenu: [{
             $set: {

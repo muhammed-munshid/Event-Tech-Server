@@ -2,28 +2,22 @@ import mongoose from 'mongoose'
 
 const managerSchema=new mongoose.Schema({
     name:{
-        type:String,
-        required:true
+        type:String
     },
     email:{
-        type:String,
-        required:true
+        type:String
     },
     mobile:{
-        type:Number,
-        required:true
+        type:Number
     },
     address:{
         type:String,
-        // required:true
     },
     adhaar: {
         type:Array,
-        // required:true
     },
     license_or_voterId: {
         type:Array,
-        // required:true
     },
     company_name: {
         type:String,
@@ -41,8 +35,7 @@ const managerSchema=new mongoose.Schema({
         type:String
     },
     password:{
-        type:String,
-        required:true
+        type:String
     },
     manager_image:{
         type:Array

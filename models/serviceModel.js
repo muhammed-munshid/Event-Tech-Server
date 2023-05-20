@@ -100,10 +100,6 @@ const serviceSchema = new mongoose.Schema({
         starter_price: {
             type: String,
         },
-        starter_checked: {
-            type: Boolean,
-            default: false
-        },
         main_name: {
             type: String,
         },
@@ -112,10 +108,6 @@ const serviceSchema = new mongoose.Schema({
         },
         main_image: {
             type: Array
-        },
-        main_checked: {
-            type: Boolean,
-            default: false
         },
         dessert_name: {
             type: String,
@@ -126,19 +118,11 @@ const serviceSchema = new mongoose.Schema({
         dessert_image: {
             type: Array
         },
-        dessert_checked: {
-            type: Boolean,
-            default: false
-        },
         salad_name: {
             type: String,
         },
         salad_price: {
             type: String,
-        },
-        salad_checked: {
-            type: Boolean,
-            default: false
         },
         salad_image: {
             type: Array
