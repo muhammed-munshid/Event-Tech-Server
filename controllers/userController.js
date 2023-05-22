@@ -190,6 +190,7 @@ export const userResetPassword = async (req, res) => {
 export const eventForm = async (req, res) => {
     try {
         const userId = req.body.userId
+        const orderId = req.params.id
         const userData = req.body
         const { name, email, mobile, address, date, time, count, type, pin, state, district, place, grandTotal } = userData
         const formDate = new Date(date);
@@ -199,6 +200,7 @@ export const eventForm = async (req, res) => {
             await formModel.findOneAndUpdate({ user_id: userId }, {
                 $push: {
                     form: [{
+                        order_id: orderId,
                         formName: name,
                         formEmail: email,
                         formMobile: mobile,
@@ -213,7 +215,8 @@ export const eventForm = async (req, res) => {
                         time: time,
                         count: count,
                         type: type,
-                        items: items
+                        items: items,
+                        status: 'failed'
                     }]
                 }
             }).then(() => {
@@ -223,6 +226,7 @@ export const eventForm = async (req, res) => {
             const newForm = new formModel({
                 user_id: userId,
                 form: [{
+                    order_id: orderId,
                     formName: name,
                     formEmail: email,
                     formMobile: mobile,
@@ -237,7 +241,8 @@ export const eventForm = async (req, res) => {
                     time: time,
                     count: count,
                     type: type,
-                    items: items
+                    items: items,
+                    status: 'failed'
                 }]
             })
             newForm.save()
@@ -276,13 +281,52 @@ export const companyDetails = async (req, res) => {
     }
 }
 
+export const filterService = async (req, res) => {
+    try {
+        const name = req.body.name
+        if (name === 'Food Service') {
+            const manager = await serviceModel.find({catering_status:true}).populate('manager_id')
+            const managerIds = manager.map((item) => item.manager_id._id);
+            res.status(200).json(managerIds)
+        } else if (name === 'Stage Service') {
+            const manager = await serviceModel.find({stage_status:true}).populate('manager_id')
+            const managerIds = manager.map((item) => item.manager_id._id);
+            res.status(200).json(managerIds)
+        } else if (name === 'Decoration Service') {
+            const manager = await serviceModel.find({decoration_status:true}).populate('manager_id')
+            const managerIds = manager.map((item) => item.manager_id._id);
+            res.status(200).json(managerIds)
+        } else if (name === 'Photography Service') {
+            const manager = await serviceModel.find({photography_status:true}).populate('manager_id')
+            const managerIds = manager.map((item) => item.manager_id._id);
+            res.status(200).json(managerIds)
+        } else if (name === 'Vehicle Service') {
+            const manager = await serviceModel.find({vehicle_status:true}).populate('manager_id')
+            const managerIds = manager.map((item) => item.manager_id._id);
+            res.status(200).json(managerIds)
+        } 
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({ message: "Error in Login", success: false, error })
+    }
+}
+
 export const filterLocation = async (req, res) => {
     try {
         const name = req.body.name
-        console.log(name);
-        const manager = await managerModel.find({$rejex:name})
-        console.log(manager);
-        res.status(200).send()
+        const manager = await managerModel.find({district:name})
+        res.status(200).json(manager)
+    } catch (error) {
+        console.log(error);
+        res.status(500).send({ message: "Error in Login", success: false, error })
+    }
+}
+
+export const getData = async (req, res) => {
+    try {
+        const managerIds = req.body.managerId
+        const managers = await managerModel.find({_id:managerIds})
+        res.status(200).json(managers)
     } catch (error) {
         console.log(error);
         res.status(500).send({ message: "Error in Login", success: false, error })
@@ -295,7 +339,7 @@ export const serviceDetails = async (req, res) => {
         const services = await serviceModel.findOne({ manager_id: managerId })
         res.status(200).send({ data: services })
     } catch (error) {
-        console.log('login', error);
+        console.log(error);
         res.status(500).send({ message: "Error in Login", success: false, error })
     }
 }
@@ -306,7 +350,7 @@ export const serviceDatas = async (req, res) => {
         const serviceList = await serviceModel.findOne({ manager_id: managerId })
         res.status(200).send({ success: true, data: serviceList })
     } catch (error) {
-        console.log('login', error);
+        console.log(error);
         res.status(500).send({ message: "Error in Login", success: false, error })
     }
 }
@@ -326,7 +370,7 @@ export const selectService = async (req, res) => {
         })
         res.status(200).send({ success: true })
     } catch (error) {
-        console.log('login', error);
+        console.log(error);
         res.status(500).send({ message: "Error in Login", success: false, error })
     }
 }
@@ -368,7 +412,6 @@ export const cartList = async (req, res) => {
             cart[z] = req.body.datas8[i]
             z++
         }
-        console.log(cart, 'cart');
         if (cart.length != 0) {
             const carts = new cartModel({
                 user_id: userId,
@@ -403,13 +446,47 @@ export const orders = (req, res) => {
     }
 }
 
-export const verify = (req, res) => {
+export const verify = async (req, res) => {
+    const userId = req.body.userId
+    const orderId = req.body.response.razorpay_order_id
+    const newStatus = 'Success';
+    const failedStatus = 'Failed';
     const body = req.body.response.razorpay_order_id + "|" + req.body.response.razorpay_payment_id
     // eslint-disable-next-line no-undef
     const expectedSignature = crypto.createHmac('sha256', process.env.KEY_SECRET).update(body.toString()).digest('hex')
     if (expectedSignature === req.body.response.razorpay_signature) {
+        const datas = formModel.findOne({user_id:userId})
+        const foundData = await datas.exec();
+        if (foundData) {
+            const formData = foundData.form;
+            for (const form of formData) {
+              if (form.order_id === orderId) {
+                form.status = newStatus;
+                break;
+              }
+            }
+            await foundData.save();
+            console.log('Order updated successfully');
+          } else {
+            console.log('Data not found');
+          }
         res.status(200).send({ status: true, message: 'Sign Valid' })
     } else {
+        const datas = formModel.findOne({user_id:userId})
+        const foundData = await datas.exec();
+        if (foundData) {
+            const formData = foundData.form;
+            for (const form of formData) {
+              if (form.order_id === orderId) {
+                form.status = failedStatus;
+                break;
+              }
+            }
+            await foundData.save();
+            console.log('Order updated successfully');
+          } else {
+            console.log('Data not found');
+          }
         res.status(200).send({ status: false, message: 'Sign InValid' })
     }
 }
@@ -429,7 +506,10 @@ export const removeCartItem = async (req, res) => {
 
 export const bookings = async (req, res) => {
     try {
-        const form = await formModel.find()
+        const userId = req.body.userId
+        const forms = await formModel.findOne({user_id:userId})
+        const form = forms.form
+        console.log(form);
         res.status(200).json(form)
     } catch (error) {
         console.log('login', error);
@@ -440,13 +520,12 @@ export const bookings = async (req, res) => {
 export const bookingDetails = async (req, res) => {
     try {
         const id = req.params.id
-        console.log(id);
         const userId = req.body.userId
         const forms = await formModel.findOne({ user_id: userId })
         const form = forms.form
         form.forEach(elements => {
             if (elements._id == id) {
-                res.status(200).json({elements})
+                res.status(200).json(elements)
             }
         });
     } catch (error) {

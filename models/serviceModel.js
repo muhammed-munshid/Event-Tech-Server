@@ -3,7 +3,8 @@ const Objectid = mongoose.Types.ObjectId
 
 const serviceSchema = new mongoose.Schema({
     manager_id: {
-        type: Objectid
+        type: Objectid,
+        ref:'managers'
     },
     catering_name: {
         type: String
@@ -13,10 +14,6 @@ const serviceSchema = new mongoose.Schema({
         default: false
     },
     user_catering_status: {
-        type: Boolean,
-        default: false
-    },
-    filter_catering: {
         type: Boolean,
         default: false
     },
@@ -31,10 +28,6 @@ const serviceSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
-    filter_stage: {
-        type: Boolean,
-        default: false
-    },
     decoration_name: {
         type: String
     },
@@ -43,10 +36,6 @@ const serviceSchema = new mongoose.Schema({
         default: false
     },
     user_decoration_status: {
-        type: Boolean,
-        default: false
-    },
-    filter_decoration: {
         type: Boolean,
         default: false
     },
@@ -61,10 +50,6 @@ const serviceSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
-    filter_photography: {
-        type: Boolean,
-        default: false
-    },
     vehicle_name: {
         type: String
     },
@@ -73,10 +58,6 @@ const serviceSchema = new mongoose.Schema({
         default: false
     },
     user_vehicle_status: {
-        type: Boolean,
-        default: false
-    },
-    filter_vehicle: {
         type: Boolean,
         default: false
     },

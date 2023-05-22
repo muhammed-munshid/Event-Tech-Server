@@ -5,6 +5,7 @@ export default async(req,res,next)=>{
     try {
         // got error here
         const token= req.headers["authorization"].split(" ")[1];
+        // eslint-disable-next-line no-undef
         jwt.verify(token,process.env.JWT_SECRET,(err,decoded)=>{
         if(err){
             console.log('error',err);

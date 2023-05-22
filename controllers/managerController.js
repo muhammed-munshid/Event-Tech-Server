@@ -182,14 +182,18 @@ export const managerData = async (req, res) => {
 }
 
 export const dashboard = async (req, res) => {
-    console.log('Hey');
     try {
+        let totalAmount = 0;
         const users = await userModel.find()
-        console.log(users);
         const forms = await formModel.find()
+        forms.forEach((item) => {
+            item.form.forEach((formItem) => {
+                totalAmount += formItem.totalPrice;
+              // eslint-disable-next-line no-prototype-builtins
+            });
+          });
         const userLength = users.length
-        const formLength =forms.length
-        res.status(200).json({userLength,formLength})
+        res.status(200).json({userLength,forms,totalAmount})
     } catch (error) {
         console.log('login', error);
         res.status(500).send({ message: "Error in Login", success: false, error })

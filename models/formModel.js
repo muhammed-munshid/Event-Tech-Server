@@ -3,11 +3,13 @@ const Objectid = mongoose.Types.ObjectId
 
 const formSchema = new mongoose.Schema({
     user_id: {
-        type: Objectid,
-        required: true
+        type: Objectid
     },
     form: 
         [{
+            order_id: {
+                type:String
+            },
             formName: {
                 type: String,
                 required: true
@@ -64,6 +66,9 @@ const formSchema = new mongoose.Schema({
             },
             items: {
                 type:Array
+            },
+            status: {
+                type:String
             }
         }]
 })

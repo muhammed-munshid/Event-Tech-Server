@@ -36,10 +36,11 @@ export const dashboard = async (req, res) => {
         const users = await userModel.find()
         const approved = await managerModel.find({approval:true})
         const managers = await managerModel.find()
+        const forms = await formModel.find()
         const userLength = users.length
         const approvedLength = approved.length
         const managerLength = managers.length
-        res.status(200).json({userLength,approvedLength,managerLength})
+        res.status(200).json({userLength,approvedLength,managerLength,forms})
     } catch (error) {
         console.log('error', error);
         res.status(500).send({ message: "Error in Login", success: false, error })
