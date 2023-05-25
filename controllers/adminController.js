@@ -40,7 +40,64 @@ export const dashboard = async (req, res) => {
         const userLength = users.length
         const approvedLength = approved.length
         const managerLength = managers.length
-        res.status(200).json({userLength,approvedLength,managerLength,forms})
+        const year = new Date().getFullYear();
+        const userCount = new Array(12).fill(0);
+        const promises = [];
+        
+        for (let month = 1; month <= 12; month++){
+          const start = new Date(`${year}-${month.toString().padStart(2, '0')}-01`);
+          let end;
+          if (month === 12) {
+            end = new Date(`${year}-12-31`);
+          } else {
+            end = new Date(`${year}-${(month + 1).toString().padStart(2, '0')}-01`);
+          }
+          
+          const promise = formModel.aggregate([
+            {
+              $unwind: "$form" // Unwind the form array
+            },
+            {
+              $match: {
+                "form.date": {
+                  $gte: start,
+                  $lt: end
+                },
+                "form.status": "Success" // Only match forms with status "Success"
+              }
+            },
+            {
+              $group: {
+                _id: null,
+                total: { $sum: "$form.totalPrice" } // Sum the totalAmount field
+              }
+            }
+          ])          
+          .then((result) => {
+              if (result.length > 0) {
+              userCount[month - 1] = result[0].total;
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+          promises.push(promise);
+        }
+        
+        Promise.all(promises)
+        .then(() => {
+          if(userCount.some((count) => count > 0)){
+            res.status(200).json({userLength,approvedLength,managerLength,forms,userCount})
+          }else{
+            res.send({
+              success:false,
+              message:'No data found',
+            })
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     } catch (error) {
         console.log('error', error);
         res.status(500).send({ message: "Error in Login", success: false, error })
