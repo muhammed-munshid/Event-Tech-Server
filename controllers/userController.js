@@ -537,11 +537,11 @@ export const bookingDetails = async (req, res) => {
 
 export const addProfile = async (req, res) => {
     try {
-        const managerId = req.body.managerId
+        const userId = req.body.userId
         const details = req.body
         const { name, email, mobile } = details.otherData
         const { imageUpload } = details.imageData
-        await userModel.findOneAndUpdate({ _id: managerId }, {
+        await userModel.findOneAndUpdate({ _id: userId }, {
             $set: {
                 name: name,
                 email: email,
