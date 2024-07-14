@@ -79,7 +79,7 @@ export const userLogin = async (req, res) => {
                 } else {
                     // eslint-disable-next-line no-undef
                     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
-                        expiresIn: '1d'
+                        expiresIn: '1m'
                     }) //the jwt.sign() will generate the token,the expiresIn is for destory the session
                     res.status(200).send({ message: "Login Successfull", success: true, data: token })
                 }
@@ -94,6 +94,7 @@ export const userLogin = async (req, res) => {
 
 
 export const loginGoogle = async (req, res) => {
+    console.log('Hello');
     try {
         const googleToken = req.params.id
         // eslint-disable-next-line no-undef
@@ -116,6 +117,7 @@ export const loginGoogle = async (req, res) => {
         if (user) {
             let token = jwt.sign({
                 _id: user._id,
+            // eslint-disable-next-line no-undef
             });
             res.send({ message: "Login Successfull", success: true, data: token })
         } else {
