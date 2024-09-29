@@ -6,7 +6,8 @@ export default async (req, res, next) => {
     const token = req.headers["authorization"].split(" ")[1];
     jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
       if (err) {
-        if (err.name === 'TokenExpiredError') {
+        console.log(err);
+        if (err.name === 'TokenExpiredError' || err === 'JsonWebTokenError') {
           return res.status(401).send({
             message: "Session expired. Please log in again.",
             expired: true
