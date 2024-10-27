@@ -205,7 +205,10 @@ const serviceSchema = new mongoose.Schema({
             type: Boolean,
             default: false
         }
-    }]
+    }],
+    count_people: {
+        type: Number
+    }
 })
 
 
