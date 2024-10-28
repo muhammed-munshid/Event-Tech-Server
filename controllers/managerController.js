@@ -141,7 +141,7 @@ export const Login = async (req, res) => {
                     } else {
                         // eslint-disable-next-line no-undef
                         const token = jwt.sign({ id: manager._id }, process.env.JWT_SECRET, {
-                            expiresIn: '1d'
+                            expiresIn: '30d'
                         }) //the jwt.sign() will generate the token,the expiresIn is for destory the session
                         res.status(200).send({ message: "Login Successfull", success: true, data: token })
                     }
